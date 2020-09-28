@@ -6,37 +6,28 @@ import * as authRedirect from '../../authentication/authRedirect';
 import './Nav-bar.css';
 import { bindActionCreators } from 'redux';
 
-function Navbar( {userAuth, ...props} ){
-    //const [userAuth, setUserAuth] = useState(userAuth);
-    const [signedIn, setSignedIn] = useState(false);
+function Navbar({ userAuth, ...props}){
+
+    const [user, setUser] = useState(userAuth);
 
     useEffect(() => {
-        if(userAuth.name){
-            setSignedIn(true);
-            console.log("Hola "+ userAuth.name);
-        }else{
-            console.log("No logged in");
+        const userCheck = user?.name;
+        if(!userCheck){
+            setUser(authRedirect.getAccount());
+        }else if(!userAuth?.name){
+            props.actions.signInUser(user);
         }
-    },[userAuth.name]);
+    },[user, userAuth, props.actions]);
 
     function handleLogin(){
-        authRedirect.signIn(handleRedirect);
-    }
-
-    function handleRedirect(error, response){
-        debugger;
-        props.actions.signInUser();
-        if(!error){
-            props.actions.signInUser();
-            console.log(response);
+        if(user?.name){
+            authRedirect.signOut();
         }else{
-            console.log(error);
+            authRedirect.signIn();
         }
     }
-    
-    function handleLogout(){
-        props.actions.signOutUser()
-    }
+
+    const textButton = user?.name ? user.name.toLocaleUpperCase() : 'LOGIN';
 
     return (
         <nav>
@@ -46,7 +37,7 @@ function Navbar( {userAuth, ...props} ){
                 <li><a href="/">Services</a></li>
                 <li><a href="/">Team</a></li>
                 <li><a href="/">Contact</a></li>
-                <li>{signedIn ? <button onClick={handleLogout} >LOGOUT</button> : <button onClick={handleLogin} >LOGIN</button> }</li>{/**/}
+                <li><button onClick={handleLogin} >{textButton}</button></li>
             </ul>
         </nav>
     )
@@ -54,14 +45,13 @@ function Navbar( {userAuth, ...props} ){
 
 Navbar.propTypes = {
     userAuth: propTypes.object.isRequired,
-    // signInUser: propTypes.func.isRequired,
-    // signOutUser: propTypes.func.isRequired
+    actions: propTypes.object.isRequired
 }
 
 function mapStateToProps(state){
     return {
         userAuth: state.userAuth
-    }
+    };
 }
 
 function mapDispatchToProps(dispatch){
@@ -69,9 +59,9 @@ function mapDispatchToProps(dispatch){
         actions: {
             signInUser: bindActionCreators(authActions.signInUser, dispatch),
             signOutUser: bindActionCreators(authActions.signOutUser, dispatch)
-        }   
+        }
     };
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
+export default connect(mapStateToProps, mapDispatchToProps) (Navbar);

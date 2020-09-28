@@ -6,21 +6,23 @@ import * as Msal from "msal";
 // configuration parameters are located at authConfig.js
 const myMSALObj = new Msal.UserAgentApplication(msalConfig);
 
-// function authCallback(error, response) {
-//     //handle redirect response
-//     console.log(error);
-//     if (myMSALObj.getAccount()) {
-//         console.log(response);
-//     }
-// }
-
-export function getMsalObject(){
-    return myMSALObj;
+function authCallback(error, response) {
+    //handle redirect response
+    console.log("Hola Callback "+error);
+    console.log("Hola Callback "+response);
 }
 
-export function signIn(handleCallback){
-    myMSALObj.handleRedirectCallback(handleCallback);
+export function getAccount(){
+    return myMSALObj.getAccount();
+}
+
+myMSALObj.handleRedirectCallback(authCallback);
+
+
+export function signIn(){
+    console.log("Hola login request in");
     myMSALObj.loginRedirect(loginRequest);
+    console.log("Hola login request out");
 }
 
 export function signOut(){

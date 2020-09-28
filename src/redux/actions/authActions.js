@@ -9,9 +9,8 @@ export function userLoggedOutSuccess(){
     return { type: actionTypes.USER_LOGGEDOUT_SUCCESS };
 }
 
-export function signInUser(){
+export function signInUser(authUser){
     return function (dispatch){
-        const authUser = authRedirect.getMsalObject().getAccount()??{};
         return dispatch(userLoggedInSuccess(authUser));
     }
 }
