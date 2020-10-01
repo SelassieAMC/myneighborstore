@@ -28,6 +28,6 @@ export const msalConfig = {
   
   // Add here scopes for access token to be used at the API endpoints.
   export const tokenRequest = {
-    scopes: ["Mail.Read"]
+    scopes: ["https://myneighbourorg.onmicrosoft.com/api/Stores"]
   };
   

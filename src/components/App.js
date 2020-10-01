@@ -8,6 +8,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import Home from './home/Home';
 import PageNotFound from './errors/PageNotFound';
 import Login from './login/Login';
+import StoresPage from './stores/StoresPage';
 
 library.add(fab);
 
@@ -23,6 +24,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Home}></Route>
           <Route exact path="/login" component={Login}></Route>
+          <Route exact path="/stores" component={StoresPage}></Route>
           <Route component={PageNotFound}></Route>
         </Switch>
       </BrowserRouter>

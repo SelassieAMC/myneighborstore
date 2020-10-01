@@ -4,6 +4,8 @@ import propTypes from 'prop-types';
 import * as  authActions from '../../redux/actions/authActions';
 import * as authRedirect from '../../authentication/authRedirect';
 import './Nav-bar.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { bindActionCreators } from 'redux';
 
 function Navbar({ userAuth, ...props}){
@@ -29,6 +31,10 @@ function Navbar({ userAuth, ...props}){
 
     const textButton = user?.name ? user.name.toLocaleUpperCase() : 'LOGIN';
 
+    const iconLogin = user?.name ?
+        <FontAwesomeIcon icon={faSignOutAlt} size="2x" /> :
+        <></>
+    
     return (
         <nav>
             <ul>
@@ -37,7 +43,10 @@ function Navbar({ userAuth, ...props}){
                 <li><a href="/">Services</a></li>
                 <li><a href="/">Team</a></li>
                 <li><a href="/">Contact</a></li>
-                <li><button onClick={handleLogin} >{textButton}</button></li>
+                <li>
+                    <button onClick={handleLogin} >{textButton}</button>
+                    <div className="user-profile"></div>
+                </li>
             </ul>
         </nav>
     )

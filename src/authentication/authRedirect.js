@@ -1,5 +1,4 @@
-import { loginRequest } from './authConfig';
-import { msalConfig } from './authConfig';
+import { loginRequest, msalConfig, tokenRequest } from './authConfig';
 import * as Msal from "msal";
 
 // Create the main myMSALObj instance
@@ -10,6 +9,7 @@ function authCallback(error, response) {
     //handle redirect response
     console.log("Hola Callback "+error);
     console.log("Hola Callback "+response);
+    console.log("Token type is "+response.tokenType);
 }
 
 export function getAccount(){
@@ -20,11 +20,22 @@ myMSALObj.handleRedirectCallback(authCallback);
 
 
 export function signIn(){
-    console.log("Hola login request in");
     myMSALObj.loginRedirect(loginRequest);
-    console.log("Hola login request out");
 }
 
 export function signOut(){
     myMSALObj.logout();
+}
+
+export function getTokenRedirect(){
+    return myMSALObj.acquireTokenSilent(tokenRequest)
+        .then((response) => {
+            if (response.accessToken) {
+                console.log("Token acquired silently");
+            }
+            return response;
+        }).catch(error => {
+            console.log(error);
+            return myMSALObj.acquireTokenRedirect(tokenRequest);
+        });
 }
