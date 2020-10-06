@@ -4,9 +4,8 @@ import propTypes from 'prop-types';
 import * as  authActions from '../../redux/actions/authActions';
 import * as authRedirect from '../../authentication/authRedirect';
 import './Nav-bar.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { bindActionCreators } from 'redux';
+import { NavLink } from 'react-router-dom';
 
 function Navbar({ userAuth, ...props}){
 
@@ -30,19 +29,15 @@ function Navbar({ userAuth, ...props}){
     }
 
     const textButton = user?.name ? user.name.toLocaleUpperCase() : 'LOGIN';
-
-    const iconLogin = user?.name ?
-        <FontAwesomeIcon icon={faSignOutAlt} size="2x" /> :
-        <></>
     
     return (
         <nav>
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/">About</a></li>
-                <li><a href="/">Services</a></li>
-                <li><a href="/">Team</a></li>
-                <li><a href="/">Contact</a></li>
+                <li><NavLink exact to="/">Home</NavLink></li>
+                <li><NavLink exact to="/">About</NavLink></li>
+                <li><NavLink exact to="/">Team</NavLink></li>
+                <li><NavLink exact to="/">Contact</NavLink></li>
+                <li><NavLink to="/Stores">Stores</NavLink></li>
                 <li>
                     <button onClick={handleLogin} >{textButton}</button>
                     <div className="user-profile"></div>

@@ -1,0 +1,53 @@
+.stores-admin {
+    padding: 40px 80px;
+    font-family:'Droid Sans', sans-serif;
+}
+
+.stores-admin h2{
+    text-align: center;
+    margin-top: 40px;
+    font-weight: bold;
+    color: #58595a;
+}
+
+.stores-admin p.page-description{
+    text-align: center;
+    margin: 30px auto;
+    font-size: 18px;
+    color: #85878c;
+}
+
+.menu-button{
+    background-color: #f48840;
+    color: black;
+    border-radius: 5px;
+    width: 15%;
+    padding: 10px;
+    margin: 10px 5px 20px 0;
+    font-size: 18px;
+    transition: 0.18s ease-in-out;
+    box-shadow: 0 1px 5px rgba(146, 58, 7, 0.596);
+}
+
+.plus-icon{
+    margin-right: 5%;
+    transition: transform 1s;
+}
+
+.menu-button:hover{
+    color: white;
+    transform: translateY(-5px) scale(1.02);
+}
+
+.menu-button:hover .plus-icon{
+    transform: rotate(360);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+}
+
+@media only screen and (max-width: 520px) {
+    .menu-button{
+        width: 100%;
+    }
+}

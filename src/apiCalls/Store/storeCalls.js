@@ -9,21 +9,54 @@ function getAccessToken(){
         }).catch(error => console.log(error));
 }
 
-
-export function getStores(result, resolve) {
+function createHeaders(token, methodType, body = {}){
     const headers = new Headers();
+    headers.append("Authorization",`Bearer ${token}`);
+    let requestInit;
+    if( methodType === 'GET'){
+        requestInit = {
+            method: methodType,
+            headers: headers
+        }
+    }else{
+        headers.append("Content-Type",'application/json');
+        requestInit = {
+            method: methodType,
+            headers: headers,
+            body: JSON.stringify(body)
+        }
+    }
+    return requestInit;
+}
+
+
+export function getStores() {
 
     return getAccessToken().then(token => {
-        headers.append("Authorization",`Bearer ${token}`);
 
-        const requestInit = {
-            method: 'GET',
-            headers: headers
-        };
+        const requestInit = createHeaders(token, 'GET');
 
         return fetch(baseApiUrl,requestInit)
         .then( response => {
-            console.log(response);
+            return response.json();
+        })
+        .catch(error => {
+            console.log(`Error calling api ${error}`);
+            throw error;
+        });
+    }).catch(error => {
+        console.log(`Error getting access token ${error}`);
+        throw error;
+    });
+}
+
+export function createStore(store){
+    return getAccessToken().then(token => {
+
+        const requestInit = createHeaders(token, 'POST', store );
+
+        return fetch(baseApiUrl,requestInit)
+        .then( response => {
             return response.json();
         })
         .catch(error => {
