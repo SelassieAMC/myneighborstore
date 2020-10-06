@@ -1,4 +1,5 @@
 .thumbnail {
+    text-align: center;
     padding: 0;
     margin-bottom: 30px;
     background-color: #fff;
@@ -15,7 +16,8 @@
 .lightbox img {
     border-radius: 4px 4px 0 0;
     max-width: 100%;
-    height: auto;
+    height: 250px;
+    object-fit: cover;
 }
 
 .caption{
@@ -33,4 +35,10 @@
     font-size: 12px;
     color: #7b7d7d;
     margin: 0;
+}
+
+@media (max-width: 576px) {
+    .lightbox img {
+        height: auto;
+    }
 }

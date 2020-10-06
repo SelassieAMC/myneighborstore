@@ -8,6 +8,7 @@ import './StoresPage.css';
 import CreateStore from './CreateStore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom';
 
 function StoresPage(props){
     const [addStore, setAddStore] = useState(false);
@@ -30,19 +31,19 @@ function StoresPage(props){
             <p className="page-description">Manage the stores in the application.</p>
             { 
                 props.apiCallFailed ?
-                <h2>Error al cargar informacion de tiendas</h2> :
+                <h2>Error trying to load stores information</h2> :
                 props.apiStatus ? 
                 <Spinner/> :
-                    addStore ? 
-                    <CreateStore cancelAction={setAddStore}/> : 
-                    <>
-                        <button className="menu-button" onClick={handleAddStore}>
+                <>
+                    <Link to="/create-store">
+                        <button type="button" className="menu-button" onClick={handleAddStore}>
                             <FontAwesomeIcon icon={faPlusCircle} size="lg" className="plus-icon" />
                             Add Store
-                        </button>
+                        </button>                        
+                    </Link>
 
-                        <StoresList stores = {props.stores}/>
-                    </>
+                    <StoresList stores = {props.stores} showDetails={false}/>
+                </>
             }
         </div>
     );

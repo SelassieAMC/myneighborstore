@@ -2,9 +2,9 @@ import React from 'react';
 import './Basic.css';
 import './MySubmitButton.css';
 
-function MySubmitButton({textButton, type, onClickHandler}){
+function MySubmitButton({textButton, type, onClickHandler, styleClass}){
     return (
-        <button className="contact50-form-btn" type={type} onClick={onClickHandler}>
+        <button className={styleClass} type={type} onClick={onClickHandler}>
             <span>
                 {textButton}
             </span>

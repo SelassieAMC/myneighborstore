@@ -52,6 +52,10 @@
   width: 100%;
 }
 
+.cancel-button {
+  width: 48%;
+}
+
 @media (max-width: 576px) {
     .wrap-contact100 {
       padding: 62px 15px 90px 15px;

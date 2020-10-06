@@ -8,13 +8,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as storeActions  from '../../redux/actions/storeActions'
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
-function CreateStore({cancelAction, history, store, ...props}){
+function CreateStore({history, store, ...props}){
 
     const [storeObj,setStore] = useState(new Store(store ?? {}));
-    function handleCancelAction(){
-        cancelAction(false);
-    }
 
     function handleSubmitAction(event){
         event.preventDefault();
@@ -90,8 +88,10 @@ function CreateStore({cancelAction, history, store, ...props}){
                     />
 
                     <div className="container-contact100-form-btn">
-                        <MySubmitButton textButton="Submit" type="submit"/>
-                        <MySubmitButton textButton="Cancel" onClickHandler={handleCancelAction}/>
+                        <MySubmitButton textButton="Submit" type="submit" styleClass="contact50-form-btn"/>
+                        <Link className="cancel-button" to="/stores">
+                            <MySubmitButton textButton="Cancel" styleClass="contact100-form-btn" />
+                        </Link>
                     </div>
                 </form>
             </div>
