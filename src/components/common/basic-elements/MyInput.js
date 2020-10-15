@@ -10,14 +10,16 @@ export default function MyInput(
         styleclass, 
         type,
         name,
-        value
+        value,
+        isMultiple,
+        onChangeHandler
     }
     
     ){
     return (
         <div className={`wrap-input100 validate-input bg1 ${styleclass}`} data-validate={msgValidation}>
-					<span className="label-input100">{txtLabel} {isMandatory ? '*' : '' }</span>
-					<input className="input100" type={type} value={value} name={name} placeholder={msgPlaceHolder}/>
+            <span className="label-input100">{txtLabel} {isMandatory ? '*' : '' }</span>
+            <input onChange={onChangeHandler} className="input100" multiple={isMultiple} type={type} value={value} name={name} placeholder={msgPlaceHolder}/>
         </div>
     )
 }

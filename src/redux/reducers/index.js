@@ -1,12 +1,14 @@
 import { combineReducers } from "redux";
 import userAuth from "./authReducer";
 import apiStatus from './apiStatusReducer';
-import stores from "./storeReducer";
+import stores from "./storesReducer";
+import store from "./storeEditionReducer";
 
 const rootReducer = combineReducers({
     userAuth,
     apiStatus,
-    stores
+    stores,
+    store
 });
 
 export default rootReducer;

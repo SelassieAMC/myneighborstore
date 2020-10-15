@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 
 function CreateStore({history, store, ...props}){
 
-    const [storeObj,setStore] = useState(new Store(store ?? {}));
+    const [storeObj] = useState(new Store(store ?? {}));
 
     function handleSubmitAction(event){
         event.preventDefault();
@@ -34,7 +34,7 @@ function CreateStore({history, store, ...props}){
         props.actions.saveStore(newStore)
             .then( () => {
                 toast.success("Store created successfully");
-                history.push('/stores');
+                history.push('/add-store-details');
             })
             .catch(error => {
                 toast.error(error);
@@ -88,7 +88,7 @@ function CreateStore({history, store, ...props}){
                     />
 
                     <div className="container-contact100-form-btn">
-                        <MySubmitButton textButton="Submit" type="submit" styleClass="contact50-form-btn"/>
+                        <MySubmitButton textButton="Create & Continue" type="submit" styleClass="contact50-form-btn"/>
                         <Link className="cancel-button" to="/stores">
                             <MySubmitButton textButton="Cancel" styleClass="contact100-form-btn" />
                         </Link>

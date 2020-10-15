@@ -1,6 +1,6 @@
 import { getTokenRedirect } from '../../authentication/authRedirect';
 
-const baseApiUrl = process.env.REACT_APP_API_URL + "/stores"
+const baseApiUrl = process.env.REACT_APP_API_URL;
 
 function getAccessToken(){
     return getTokenRedirect()
@@ -11,7 +11,10 @@ function getAccessToken(){
 
 function createHeaders(token, methodType, body = {}){
     const headers = new Headers();
-    headers.append("Authorization",`Bearer ${token}`);
+    if(!token){
+        headers.append("Authorization",`Bearer ${token}`);
+    }
+
     let requestInit;
     if( methodType === 'GET'){
         requestInit = {
@@ -30,13 +33,25 @@ function createHeaders(token, methodType, body = {}){
 }
 
 
-export function getStores() {
+export async function getStores() {
+    
+    const requestInit = createHeaders(null, 'GET');
+    return fetch(baseApiUrl+"/stores",requestInit)
+        .then( response => {
+            return response.json();
+        })
+        .catch(error => {
+            console.log(`Error calling api ${error}`);
+            throw error;
+        });
+}
 
+export async function createStore(store){
     return getAccessToken().then(token => {
 
-        const requestInit = createHeaders(token, 'GET');
+        const requestInit = createHeaders(token, 'POST', store );
 
-        return fetch(baseApiUrl,requestInit)
+        return fetch(baseApiUrl+"/stores",requestInit)
         .then( response => {
             return response.json();
         })
@@ -50,19 +65,60 @@ export function getStores() {
     });
 }
 
-export function createStore(store){
+
+export async function saveStoreDetails(store){
     return getAccessToken().then(token => {
 
-        const requestInit = createHeaders(token, 'POST', store );
+        const requestInit = createHeaders(token, 'PUT', store );
 
-        return fetch(baseApiUrl,requestInit)
+        return fetch(baseApiUrl+"/stores",requestInit)
         .then( response => {
-            return response.json();
+            if(response.ok){
+                return response.json();
+            }
+            throw response;
         })
         .catch(error => {
             console.log(`Error calling api ${error}`);
             throw error;
         });
+    }).catch(error => {
+        console.log(`Error getting access token ${error}`);
+        throw error;
+    });
+}
+
+export async function saveStorePhotos(photosData){
+
+    return getAccessToken().then(token => {
+
+        const headers = new Headers();
+        headers.append("Authorization",`Bearer ${token}`);
+
+        const formData  = new FormData();
+
+        for(const value in photosData) {
+            formData.append(photosData[value].name, photosData[value].PhotoFile);
+        }
+        formData.append("Objects",JSON.stringify(photosData));
+
+        let requestInit = {
+            method: 'POST',
+            headers: headers,
+            body: formData
+        }
+
+        return fetch(baseApiUrl+"/Gallery",requestInit)
+        .then( response => {
+            if(!response.ok){
+                throw response;
+            }
+        })
+        .catch(error => {
+            console.log(`Error calling api ${error}`);
+            throw error;
+        });
+
     }).catch(error => {
         console.log(`Error getting access token ${error}`);
         throw error;

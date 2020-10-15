@@ -5,7 +5,8 @@ class Location{
         this.city = data.city;
         this.country = data.country;
         this.coordinates = data.coordinates;
-        this.isenabled = data.isenabled;
+        this.isenable = data.isenable ?? true;
+        this.storeid = data.storeid;
     }
 
     getId(){
@@ -20,12 +21,20 @@ class Location{
         return this.city;
     }
 
-    getIsEnabled(){
-        return this.isenabled;
+    getCountry(){
+        return this.country;
+    }
+
+    getIsEnable(){
+        return this.isenable;
     }
 
     getCoordinates(){
         return this.coordinates;
+    }
+
+    getStoreId(){
+        return this.storeid;
     }
 }
 

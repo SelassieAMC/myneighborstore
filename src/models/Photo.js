@@ -3,8 +3,10 @@ class Photo{
         this.id = data.id;
         this.name = data.name;
         this.category = data.category;
-        this.urlaccess = data.urlaccess;
-        this.isenabled = data.isenabled;
+        this.urlAccess = data.urlAccess;
+        this.isEnable = data.isEnable ?? true;
+        this.storeId = data.storeId;
+        this.photoFile = data.photoFile;
     }
 
     getId(){
@@ -23,8 +25,12 @@ class Photo{
         return this.urlaccess;
     }
 
-    getIsEnabled(){
-        return this.isenabled;
+    getIsEnable(){
+        return this.isenable;
+    }
+
+    getStoreId(){
+        return this.storeid;
     }
 }
 

@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as storeActions from '../../redux/actions/storeActions';
 import Spinner from '../common/Spinner';
 import StoresList from './StoresList';
 import './StoresPage.css';
-import CreateStore from './CreateStore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
 
 function StoresPage(props){
-    const [addStore, setAddStore] = useState(false);
 
     useEffect(() => {
         if(props.stores.length === 0){
@@ -20,10 +18,6 @@ function StoresPage(props){
             });
         }
     },[props.actions,props.stores]);
-
-    function handleAddStore(){
-        setAddStore(true);
-    }
 
     return(
         <div className="stores-admin">
@@ -36,7 +30,7 @@ function StoresPage(props){
                 <Spinner/> :
                 <>
                     <Link to="/create-store">
-                        <button type="button" className="menu-button" onClick={handleAddStore}>
+                        <button type="button" className="menu-button">
                             <FontAwesomeIcon icon={faPlusCircle} size="lg" className="plus-icon" />
                             Add Store
                         </button>                        
@@ -53,7 +47,7 @@ function StoresPage(props){
 function mapStateToProps(state){
     return{
         stores: state.stores,
-        apiStatus: state.apiStatus >= 0,
+        apiStatus: state.apiStatus > 0,
         apiCallFailed: state.apiStatus === -100
     }
 }

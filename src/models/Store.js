@@ -8,21 +8,18 @@ class Store{
         this.description = store.description;
         this.email = store.email;
         this.phone = store.phone;
+        this.locations = [];
+        this.photos = [];
 
-        if(store.locations > 0){
+        if(store.locations?.length > 0){
             store.locations.forEach(element => {
                 this.locations.push(new Location(element));
             });
-        }else{
-            this.locations = [];
         }
-
-        if(store.photos > 0){
+        if(store.photos?.length > 0){
             store.photos.forEach(element => {
                 this.photos.push(new Photo(element));
             });
-        }else{
-            this.photos = [];
         }
     }
 

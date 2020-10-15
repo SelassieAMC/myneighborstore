@@ -1,0 +1,130 @@
+.container-contact100 {
+    width: 100%;  
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+  }
+
+  .container-contact100 h2{
+    text-align: center;
+    margin-top: 40px;
+    font-weight: bold;
+    color: #58595a;
+  }
+
+.wrap-contact100 {
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 25px 55px 90px 55px;
+  }
+
+.contact100-form {
+    width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.container-contact100-form-btn {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.cancel-button {
+  width: 48%;
+}
+
+.container-images {
+    display: flex;
+    width: 100%;
+    padding: 4% 2%;
+    box-sizing: border-box;
+    height: auto;
+  }
+  
+  .preview-upload {
+    flex: 1;
+    overflow: hidden;
+    transition: .5s;
+    margin: 0 2%;
+    box-shadow: 0 20px 30px rgba(0,0,0,.1);
+    line-height: 0;
+    width: 30%;
+    height: 100%;
+  }
+  
+  .preview-upload > img {
+    width: 100%;
+    /* height: calc(100% - 10vh); */
+    height: 100%;
+    object-fit: cover; 
+    transition: .5s;
+  }
+  
+  .preview-upload > span {
+    font-size: 3.8vh;
+    display: block;
+    text-align: center;
+    height: 10vh;
+    line-height: 2.6;
+  }
+  
+  .preview-upload:hover { flex: 1 1 50%; }
+  .preview-upload:hover {
+    width: 50%;
+    height: 100%;
+  }
+
+  .state-image-container{
+    align-self: center;
+    margin:40px;
+  }
+
+  .state-image{
+    max-width: 250px;
+    border-radius: 10px;
+  }
+
+  .state-form{
+    display: flex;
+  }
+
+
+
+@media (max-width: 576px) {
+  .contact100-form {
+    flex-direction: column;
+  }
+
+  .state-form{
+    flex-direction: column;
+  }
+}  
+
+@media (max-width: 1000px) {
+  .state-form{
+    flex-direction: column;
+  }
+}
