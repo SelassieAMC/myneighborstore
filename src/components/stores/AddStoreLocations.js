@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Location from '../../models/Location';
 import MyInput from '../common/basic-elements/MyInput';
 import MySubmitButton from '../common/basic-elements/MySubmitButton';
+import ListLocationsPanel from './ListLocationsPanel';
+import * as Utils from '../../utils/utils';
+import { toast } from 'react-toastify';
 
-function AddStoreLocations({location,setLocation,handleNext, handleBack}){
+function AddStoreLocations({store,setStore,locations,setLocations,handleNext, handleBack}){
+
+    const [location,setLocation] = useState(new Location({}));
 
     function handleChange(event){
         const name = event.target.name;
@@ -17,8 +23,28 @@ function AddStoreLocations({location,setLocation,handleNext, handleBack}){
         setLocation(location);
     }
 
+    function addNewLocation(){
+        if(!location.address){
+            toast.error("You must fill all the fields.");
+            return;
+        }
+        const id = Utils.createGuid();
+        location.uuid = id;
+        setLocation(location);
+
+        setStore({...store, ...store.locations.push(location)});
+        setLocation(new Location({}));
+    }
+
     return(
         <section className="contact100-form validate-form" onSubmit={handleNext}>
+            <div className="location-panel-container">
+                { store.locations.length > 0 ?
+                    <ListLocationsPanel locations={store.locations}/> :
+                    <></>
+                }
+                <button onClick={addNewLocation} className="add-button">Add site</button>
+            </div>
             <MyInput 
                 msgValidation = "Enter the address" 
                 txtLabel = "Address"
@@ -29,7 +55,7 @@ function AddStoreLocations({location,setLocation,handleNext, handleBack}){
                 value = {location.getAddress()}
                 onChangeHandler = {handleChange}
             />
-            
+
             <MyInput 
                 msgValidation = "Enter the city" 
                 txtLabel = "City"
@@ -64,9 +90,11 @@ function AddStoreLocations({location,setLocation,handleNext, handleBack}){
                 value = {location.getCoordinates()}
                 onChangeHandler = {handleChange}
             />
-
             <div className="container-contact100-form-btn">
-                <MySubmitButton textButton="Next" onClickHandler={handleNext} styleClass="contact50-form-btn"/>
+                { store.locations.length > 0 ?
+                    <MySubmitButton textButton="Next" disabled={false} onClickHandler={handleNext} styleClass="contact50-form-btn"/> :
+                    <MySubmitButton textButton="Next" disabled={true} styleClass="disabled-form-btn"/>
+                }
                 <MySubmitButton textButton="Back" onClickHandler={handleBack} styleClass="contact50-form-btn" />
             </div>
 

@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
 import MyInput from '../common/basic-elements/MyInput';
-import './CreateStore.css';
 import MySubmitButton from '../common/basic-elements/MySubmitButton';
-import { connect } from 'react-redux';
- import Store from '../../models/Store';
 import { toast } from 'react-toastify';
-import './AddStorePhotos.css';
-import Photo from '../../models/Photo';
-import * as storeActions from '../../redux/actions/storeActions';
-import { bindActionCreators } from 'redux';
 
-function AddStorePhotos({store, history,handleFinish, handleBack,  ...props}){
+function AddStorePhotos({ handleFinish, handleBack}){
 
-     const [storeObj] = useState(new Store(store ?? {}));
     const [existImages, setExists] = useState(false);
     const [images, setImages] = useState([]);
     let index = 0;
@@ -25,22 +17,7 @@ function AddStorePhotos({store, history,handleFinish, handleBack,  ...props}){
             return;
         }
         if(files.length){
-            let photosData = [];
-            for(let i=0; i< files.length; i++){
-                let photo = new Photo({});
-                photo.name = files[i].name;
-                photo.storeId = storeObj.id;
-                photo.category = 1;
-                photo.photoFile = files[i];
-                photosData.push(photo);
-            }
-            props.actions.saveStorePhotos(photosData)
-                            .then( () => {
-                                toast.success("Store data saved succesfully");
-                                history.push('/stores');
-                            }).catch(error => {
-                                toast.error(error);
-                            });
+            handleFinish(files);
         }
     }
 
@@ -72,7 +49,7 @@ function AddStorePhotos({store, history,handleFinish, handleBack,  ...props}){
         <div className="container-contact100">
             <div className="wrap-contact100">
                 <h2>Add Store Photos</h2>
-                <section className="contact100-form validate-form">
+                <form className="contact100-form validate-form" onSubmit={handleSubmitAction}>
                     <MyInput 
                         msgValidation = "Select min 1 photo and max 5" 
                         txtLabel = "Store Photos"
@@ -99,27 +76,13 @@ function AddStorePhotos({store, history,handleFinish, handleBack,  ...props}){
                         <></>
                     }
                     <div className="container-contact100-form-btn">
-                        <MySubmitButton textButton="Finish" onClickHandler={handleFinish} styleClass="contact50-form-btn"/>
+                        <MySubmitButton textButton="Finish" type="submit" styleClass="contact50-form-btn"/>
                         <MySubmitButton textButton="Back" onClickHandler={handleBack} styleClass="contact50-form-btn" />
                     </div>
 
-                </section>
+                </form>
             </div>
         </div>
     );
 }
-
-function mapStateToProps(state){
-    return {
-        store : state.store
-    }
-}
-
-function mapDispatchToProps(dispatch){
-    return {
-        actions: {
-            saveStorePhotos: bindActionCreators(storeActions.saveStorePhotos, dispatch)
-        }
-    }   
-}
-export default connect(mapStateToProps, mapDispatchToProps) (AddStorePhotos);
+export default AddStorePhotos;

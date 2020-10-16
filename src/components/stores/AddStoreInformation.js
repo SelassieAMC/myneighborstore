@@ -2,7 +2,6 @@ import React from 'react';
 import MyInput from '../common/basic-elements/MyInput';
 import MySubmitButton from '../common/basic-elements/MySubmitButton';
 import MyTextArea from '../common/basic-elements/MyTextArea';
-import './StoreCreation.css';
 
 function AddStoreInformation({store,setStore,handleNext}){
 
@@ -28,7 +27,7 @@ function AddStoreInformation({store,setStore,handleNext}){
                 msgPlaceHolder = "Enter the store name"
                 type = "text"
                 name = "name"
-                value = {store.getName()}
+                value = {store.name}
                 onChangeHandler = {handleChange}
             />
 
@@ -38,7 +37,7 @@ function AddStoreInformation({store,setStore,handleNext}){
                 isMandatory
                 msgPlaceHolder = "Type your description here ..."
                 name = "description"
-                value = {store.getDescription()}
+                value = {store.description}
                 onChangeHandler = {handleChange}
             />
 
@@ -50,7 +49,7 @@ function AddStoreInformation({store,setStore,handleNext}){
                 styleclass = "rs1-wrap-input100"
                 type="email"
                 name = "email"
-                value = {store.getEmail()}
+                value = {store.email}
                 onChangeHandler = {handleChange}
             />
 
@@ -62,7 +61,7 @@ function AddStoreInformation({store,setStore,handleNext}){
                 styleclass = "rs1-wrap-input100"
                 type="number"
                 name = "phone"
-                value = {store.getPhone()}
+                value = {store.phone}
                 onChangeHandler = {handleChange}
             />
             <div className="container-contact100-form-btn">

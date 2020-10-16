@@ -65,6 +65,44 @@ export async function createStore(store){
     });
 }
 
+export async function createStore2(store){
+    return getAccessToken().then(token => {
+        const headers = new Headers();
+        headers.append("Authorization",`Bearer ${token}`);
+
+        const formData  = new FormData();
+
+        for(const value in store.photos) {
+            formData.append(store.photos[value].name, store.photos[value].photoFile);
+        }
+        formData.append("storeData",JSON.stringify(store));
+
+        let requestInit = {
+            method: 'POST',
+            headers: headers,
+            body: formData
+        }
+
+        return fetch(baseApiUrl+"/stores",requestInit)
+        .then( response => {
+            if(response.ok){
+                return response.json();
+            }else{
+                throw response;
+            }
+        })
+        .catch(error => {
+            console.log(`Error calling api ${error}`);
+            throw error;
+        });
+
+
+    }).catch(error => {
+        console.log(`Error getting access token ${error}`);
+        throw error;
+    });
+}
+
 
 export async function saveStoreDetails(store){
     return getAccessToken().then(token => {

@@ -2,9 +2,9 @@ import React from 'react';
 import './Basic.css';
 import './MySubmitButton.css';
 
-function MySubmitButton({textButton, type, onClickHandler, styleClass}){
+function MySubmitButton({textButton, type, onClickHandler, styleClass, disabled}){
     return (
-        <button className={styleClass} type={type} onClick={onClickHandler}>
+        <button disabled={disabled} className={styleClass} type={type} onClick={onClickHandler}>
             <span>
                 {textButton}
             </span>

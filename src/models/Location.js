@@ -7,6 +7,7 @@ class Location{
         this.coordinates = data.coordinates;
         this.isenable = data.isenable ?? true;
         this.storeid = data.storeid;
+        this.uuid = data.uuid;
     }
 
     getId(){

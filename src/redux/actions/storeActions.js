@@ -10,9 +10,9 @@ export function saveStoreSuccess(store){
     return {type: actionTypes.SAVE_STORE_SUCCESS,store};
 }
 
-export function saveStorePhotosSuccess(){
-    return {type: actionTypes.SAVE_STORE_PHOTOS_SUCCESS};
-}
+// export function saveStorePhotosSuccess(){
+//     return {type: actionTypes.SAVE_STORE_PHOTOS_SUCCESS};
+// }
 
 export function loadStoresFail(){
     return {type: actionTypes.LOAD_STORES_FAIL};
@@ -22,11 +22,11 @@ export function saveStoreFail(){
     return {type: actionTypes.SAVE_STORE_FAIL};
 }
 
-export function saveStorePhotosFail(){
-    return {type: actionTypes.SAVE_STORE_PHOTOS_FAIL};
-}
+// export function saveStorePhotosFail(){
+//     return {type: actionTypes.SAVE_STORE_PHOTOS_FAIL};
+// }
 
-export function  loadStores() {
+export function loadStores() {
     return function (dispatch) {
         dispatch(beginApiCall());
         return storeCalls
@@ -53,7 +53,7 @@ export function saveStore(store){
                         throw error;
                     }) :
                 storeCalls
-                .createStore(store)
+                .createStore2(store)
                     .then( storeResp => {
                         dispatch(saveStoreSuccess(storeResp));
                     }).catch(error => {
@@ -63,17 +63,17 @@ export function saveStore(store){
     }
 }
 
-export function saveStorePhotos(photosData){
-    return function(dispatch){
-        dispatch(beginApiCall());
-        return storeCalls
-                .saveStorePhotos(photosData)
-                    .then( () => {
-                        dispatch(saveStorePhotosSuccess());
-                    })
-                    .catch(error => {
-                        dispatch(saveStorePhotosFail());
-                        throw error;
-                    });
-    }
-}
+// export function saveStorePhotos(photosData){
+//     return function(dispatch){
+//         dispatch(beginApiCall());
+//         return storeCalls
+//                 .saveStorePhotos(photosData)
+//                     .then( () => {
+//                         dispatch(saveStorePhotosSuccess());
+//                     })
+//                     .catch(error => {
+//                         dispatch(saveStorePhotosFail());
+//                         throw error;
+//                     });
+//     }
+// }
