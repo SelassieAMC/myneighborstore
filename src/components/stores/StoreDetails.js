@@ -4,7 +4,7 @@ import Store from '../../models/Store';
 import './StoreDetails.css';
 
 function StoreDetails({store, ...props}){
-    const [ storeObj, setStore] = useState(new Store( store ?? {}));
+    const storeObj = useState(new Store( store ?? {}));
     return (
         <div className="store-details">
             {store ? 

@@ -19,7 +19,7 @@ export default function MyInput(
     return (
         <div className={`wrap-input100 validate-input bg1 ${styleclass}`} data-validate={msgValidation}>
             <span className="label-input100">{txtLabel} {isMandatory ? '*' : '' }</span>
-            <input onChange={onChangeHandler} className="input100" multiple={isMultiple} type={type} value={value} name={name} placeholder={msgPlaceHolder}/>
+            <input onChange={onChangeHandler} className="input100" multiple={isMultiple} type={type} defaultValue={value} name={name} placeholder={msgPlaceHolder}/>
         </div>
     )
 }

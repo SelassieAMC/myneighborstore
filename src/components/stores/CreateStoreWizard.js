@@ -8,40 +8,38 @@ import './CreateStoreWizard.css';
 
 function CreateStoreWizard(){
     const [store,setStore] = useState(new Store({}));
-    const [location,setLocation] = useState(new Location({city:"hola"}));
+    const [location,setLocation] = useState(new Location({}));
     const [photos,setPhotos] = useState([]);
     const stepImages = ["store_construction.jpg","4323579.jpg","4063893.jpg"];
-    let currentImage = "";
 
     const [creationStep, setStep] = useState(validateActualStep());
 
     function validateActualStep(){
-        if (store?.locations.length > 0 && store?.photos.length > 0){
-            currentImage = stepImages[2];
+        if (store?.locations.length === 0 && store?.photos.length === 0 && !store.name){
+            return 1;
+        }
+        else if (store?.locations.length > 0 && store?.photos.length === 0){
             return 3;
         }
-        else if(store?.locations.length > 0){
-            currentImage = stepImages[1];
+        else if(store?.locations.length === 0){
             return 2;
         }
         else{
-            currentImage = stepImages[0];
-            return 1;
+            return 4;
         }
 
     }
 
     function StepComponent(){
         switch(creationStep){
-            case 1: return <AddStoreInformation store={store} handleSubmitAction={handleSubmitAction}/>
-            case 2: return <AddStoreLocations location={location} setLocation={setLocation} handleSubmitAction={handleSubmitAction}/>
-            case 3: return <AddStorePhotos photos={photos} setPhotos={setPhotos} handleSubmitAction={handleSubmitAction}/>
+            case 1: return <AddStoreInformation store={store} setStore={setStore}  handleNext={handleNextAction}/>
+            case 2: return <AddStoreLocations location={location} setLocation={setLocation} handleNext={handleNextAction} handleBack={handleBackAction}/>
+            case 3: return <AddStorePhotos photos={photos} setPhotos={setPhotos} handleFinish={handleNextAction} handleBack={handleNextAction}/>
             default: break;
         }
     }
 
-    function handleSubmitAction(event){
-        event.preventDefault();
+    function handleNextAction(){
         //////////////////add basic info to the store///////////////////
         if(location.city){
             setStore({...store, ...store.locations.push(new Location(location))});
@@ -53,16 +51,19 @@ function CreateStoreWizard(){
         setStep(validateActualStep());
     }
 
+    function handleBackAction(){
+        setStep(creationStep-1);
+    }
+
     return (
         <div className="container-contact100">
             <div className="wrap-contact100">
                 <h2>Create Store</h2>
-                <span class="step-current"> <span class="step-current-content"><span class="step-number"><span>0{creationStep}</span>/0{stepImages.length}</span></span> </span>
                 <div className="state-form">
                     <figure className="state-image-container">
-                        <img className="state-image" src={'/static/images/page/'+currentImage} alt=""/>
+                        <img className="state-image" src={'/static/images/page/'+stepImages[creationStep-1]} alt=""/>
                     </figure>
-                    <StepComponent store = {store} handleSubmitAction={handleSubmitAction}/>
+                    <StepComponent/>
                 </div>
             </div>
         </div>

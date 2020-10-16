@@ -29,7 +29,7 @@ function StoresPage(props){
                 props.apiStatus ? 
                 <Spinner/> :
                 <>
-                    <Link to="/create-store">
+                    <Link to="/create-store-wiz">
                         <button type="button" className="menu-button">
                             <FontAwesomeIcon icon={faPlusCircle} size="lg" className="plus-icon" />
                             Add Store

@@ -1,21 +1,26 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Store from '../../models/Store';
+import React from 'react';
 import MyInput from '../common/basic-elements/MyInput';
 import MySubmitButton from '../common/basic-elements/MySubmitButton';
 import MyTextArea from '../common/basic-elements/MyTextArea';
 import './StoreCreation.css';
 
-function AddStoreInformation({store,handleSubmitAction}){
-    const storeObj = useState(new Store(store ?? {}));
+function AddStoreInformation({store,setStore,handleNext}){
 
     function handleChange(event){
-        let value = event.target.value;
-        console.log(value);
+        const name = event.target.name;
+        const value = event.target.value;
+        switch(name){
+            case "name":store.name = value; break;
+            case "description":store.description = value; break;
+            case "email":store.email = value; break;
+            case "phone":store.phone = value; break;
+            default: break;
+        }
+        setStore(store);
     }
 
     return (
-        <form className="contact100-form validate-form" onSubmit={handleSubmitAction}>
+        <section className="contact100-form validate-form">
             <MyInput 
                 msgValidation = "Enter the name" 
                 txtLabel = "Store Name"
@@ -23,7 +28,7 @@ function AddStoreInformation({store,handleSubmitAction}){
                 msgPlaceHolder = "Enter the store name"
                 type = "text"
                 name = "name"
-                value = {storeObj.name}
+                value = {store.getName()}
                 onChangeHandler = {handleChange}
             />
 
@@ -33,7 +38,7 @@ function AddStoreInformation({store,handleSubmitAction}){
                 isMandatory
                 msgPlaceHolder = "Type your description here ..."
                 name = "description"
-                value = {storeObj.description}
+                value = {store.getDescription()}
                 onChangeHandler = {handleChange}
             />
 
@@ -45,7 +50,7 @@ function AddStoreInformation({store,handleSubmitAction}){
                 styleclass = "rs1-wrap-input100"
                 type="email"
                 name = "email"
-                value = {storeObj.email}
+                value = {store.getEmail()}
                 onChangeHandler = {handleChange}
             />
 
@@ -57,16 +62,13 @@ function AddStoreInformation({store,handleSubmitAction}){
                 styleclass = "rs1-wrap-input100"
                 type="number"
                 name = "phone"
-                value = {storeObj.phone}
+                value = {store.getPhone()}
                 onChangeHandler = {handleChange}
             />
             <div className="container-contact100-form-btn">
-                <MySubmitButton textButton="Add Basic Info" type="submit" styleClass="contact50-form-btn"/>
-                <Link className="cancel-button" to="/stores">
-                    <MySubmitButton textButton="Cancel" styleClass="contact100-form-btn" />
-                </Link>
+                <MySubmitButton textButton="Next" onClickHandler={handleNext} styleClass="contact50-form-btn"/>
             </div>
-        </form>
+        </section>
     )
 }
 

@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Location from '../../models/Location';
-import Store from '../../models/Store';
+import React from 'react';
 import MyInput from '../common/basic-elements/MyInput';
 import MySubmitButton from '../common/basic-elements/MySubmitButton';
 
-function AddStoreLocations({location,setLocation,handleSubmitAction}){
+function AddStoreLocations({location,setLocation,handleNext, handleBack}){
 
     function handleChange(event){
-        let value = event.target.value;
-        console.log(value);
-        setLocation(new Location({address:value, city:value}));
+        const name = event.target.name;
+        const value = event.target.value;
+        switch(name){
+            case "address":location.address = value; break;
+            case "city":location.city = value; break;
+            case "country":location.country = value; break;
+            case "coordinates":location.coordinates = value; break;
+            default: break;
+        }
+        setLocation(location);
     }
 
     return(
-        <form className="contact100-form validate-form" onSubmit={handleSubmitAction}>
+        <section className="contact100-form validate-form" onSubmit={handleNext}>
             <MyInput 
                 msgValidation = "Enter the address" 
                 txtLabel = "Address"
@@ -62,13 +66,11 @@ function AddStoreLocations({location,setLocation,handleSubmitAction}){
             />
 
             <div className="container-contact100-form-btn">
-                <MySubmitButton textButton="Add details & Continue" type="submit" styleClass="contact50-form-btn"/>
-                <Link className="cancel-button" to="/stores">
-                    <MySubmitButton textButton="Cancel" styleClass="contact100-form-btn" />
-                </Link>
+                <MySubmitButton textButton="Next" onClickHandler={handleNext} styleClass="contact50-form-btn"/>
+                <MySubmitButton textButton="Back" onClickHandler={handleBack} styleClass="contact50-form-btn" />
             </div>
 
-        </form>
+        </section>
     );
 }
 
