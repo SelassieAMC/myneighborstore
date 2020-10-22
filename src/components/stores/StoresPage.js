@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import * as storeActions from '../../redux/actions/storeActions';
 import Spinner from '../common/Spinner';
 import StoresList from './StoresList';
-import './StoresPage.css';
+import './styles/StoresPage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';

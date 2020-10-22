@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './StoresList.css';
+import './styles/StoresList.css';
 
 function StoresList({stores, showDetails=false}){
     return (

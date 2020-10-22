@@ -3,11 +3,21 @@ import MyInput from '../common/basic-elements/MyInput';
 import MySubmitButton from '../common/basic-elements/MySubmitButton';
 import { toast } from 'react-toastify';
 
-function AddStorePhotos({ handleFinish, handleBack}){
+function AddStorePhotos({ photos, handleFinish, handleBack, viewMode}){
 
-    const [existImages, setExists] = useState(false);
-    const [images, setImages] = useState([]);
+    const [existImages, setExists] = useState(photos.length > 0 ? true : false);
+    const [images, setImages] = useState(getUris());
     let index = 0;
+
+    function getUris(){
+        let uris = [];
+        if(photos.length > 0){
+            photos.map(element => {
+                return uris.push(element.urlAccess)
+            });
+        }
+        return uris;
+    }
 
     function handleSubmitAction(event){
         event.preventDefault();
@@ -58,6 +68,8 @@ function AddStorePhotos({ handleFinish, handleBack}){
                         name = "photos"
                         isMultiple
                         onChangeHandler={onChangeHandler}
+                        isDisabled={viewMode}
+                        hidden={viewMode}
                     />
                     {
                         existImages && images.length > 0 ? 
@@ -76,8 +88,8 @@ function AddStorePhotos({ handleFinish, handleBack}){
                         <></>
                     }
                     <div className="container-contact100-form-btn">
-                        <MySubmitButton textButton="Finish" type="submit" styleClass="contact50-form-btn"/>
-                        <MySubmitButton textButton="Back" onClickHandler={handleBack} styleClass="contact50-form-btn" />
+                        <MySubmitButton textButton="Finish" type="submit" styleClass="contact50-form-btn" isHidden={viewMode}/>
+                        <MySubmitButton textButton="Back" onClickHandler={handleBack} styleClass="contact50-form-btn" isHidden={viewMode}/>
                     </div>
 
                 </form>

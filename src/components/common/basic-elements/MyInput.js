@@ -12,14 +12,24 @@ export default function MyInput(
         name,
         value,
         isMultiple,
-        onChangeHandler
+        onChangeHandler,
+        isDisabled = false,
+        hidden = false
     }
     
     ){
     return (
-        <div className={`wrap-input100 validate-input bg1 ${styleclass}`} data-validate={msgValidation}>
+        <div hidden={hidden} className={`wrap-input100 validate-input bg1 ${styleclass}`} data-validate={msgValidation}>
             <span className="label-input100">{txtLabel} {isMandatory ? '*' : '' }</span>
-            <input onChange={onChangeHandler} className="input100" multiple={isMultiple} type={type} defaultValue={value} name={name} placeholder={msgPlaceHolder}/>
+            <input 
+                onChange={onChangeHandler} 
+                className="input100" 
+                disabled={isDisabled}
+                multiple={isMultiple} 
+                type={type} 
+                defaultValue={value} 
+                name={name} 
+                placeholder={msgPlaceHolder}/>
         </div>
     )
 }

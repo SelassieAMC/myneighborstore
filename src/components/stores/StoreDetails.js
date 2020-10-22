@@ -1,49 +1,76 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Store from '../../models/Store';
-import './StoreDetails.css';
+import * as storeActions from '../../redux/actions/storeActions';
+import AddStoreInformation from './AddStoreInformation';
+import AddStoreLocations from './AddStoreLocations';
+import AddStorePhotos from './AddStorePhotos';
+import './styles/StoreCreation.css';
+import './styles/StoreDetails.css';
 
-function StoreDetails({store, ...props}){
-    const storeObj = useState(new Store( store ?? {}));
+function StoreDetails({store, stores, ...props}){
+
+    const [stepSection, setSection] = useState(1);
+
+    useEffect(() => {
+        if(stores.length === 0){
+            props.actions.loadStores();
+        }
+    },[props, stores]);
+
+    function handleTab(step){
+        setSection(step);
+    }
+
+    function StepComponent(){
+        switch(stepSection){
+            case 1: return <AddStoreInformation store={store} viewMode={true}/>
+            case 2: return <AddStoreLocations store={store} viewMode={true}/>
+            case 3: return <AddStorePhotos photos={store.photos} viewMode={true}/>
+            default: break;
+        }
+    }
+
     return (
-        <div className="store-details">
-            {store ? 
-            <div>
-                <h2>{storeObj.name}</h2>
-                <input value={storeObj.description}/>
-                <input value={storeObj.email}/>
-                <input value={storeObj.phone}/>
-                { storeObj.locations?.map( location => {
-                    return (
-                        location.isenable ?
-                        <div className="addresses">
-                            <div className="info">
-                                <input value={location.address}/>
-                                <input value={location.coordinates}/> 
-                            </div>
-                        </div>:
-                        <></>
-                    )
-                }) }
-            </div> :
-            <h2>Tienda no encontrada</h2>
-            }
+        <div className="container-contact100">
+            <div className="wrap-contact100">
+                <h2>Store Details</h2>
+                <ul className="nav nav-pills" role="tablist">
+                    <li className="nav-item">
+                        <span className={`nav-link ${stepSection === 1 ? 'active' : ''}`} data-toggle="pill" onClick={() => handleTab(1)}>Basic Information</span>
+                    </li>
+                    <li className="nav-item">
+                        <span className={`nav-link ${stepSection === 2 ? 'active' : ''}`} data-toggle="pill" onClick={() => handleTab(2)}>Location</span>
+                    </li>
+                    <li className="nav-item">
+                        <span className={`nav-link ${stepSection === 3 ? 'active' : ''}`} data-toggle="pill" onClick={() => handleTab(3)}>Photos</span>
+                    </li>
+                </ul>
+                <div className="tab-content">
+                    <StepComponent/>
+                </div>
+            </div>
         </div>
-    );
+    )
 }
 
-
 function mapStateToProps(state, ownProps){
-
     const id = ownProps.match.params.id;
-    const store = id && state.stores.length > 0 ?
-                state.stores.find( x => x.id === id) :
-                {};
     return {
-        stores: state.stores,
-        store
+        store: state.stores.length > 0 ?
+                state.stores.find(x => x.id === id) : new Store({}),
+        stores: state.stores
     }
 }
 
+function mapDispatchToProps(dispatch){
+    return {
+        actions: {
+            updateStore : bindActionCreators(storeActions.saveStore, dispatch),
+            loadStores : bindActionCreators(storeActions.loadStores, dispatch)
+        }
+    }
+}
 
-export default connect(mapStateToProps, null) (StoreDetails);
+export default connect(mapStateToProps, mapDispatchToProps) (StoreDetails);

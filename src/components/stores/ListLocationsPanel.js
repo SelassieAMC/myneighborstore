@@ -19,7 +19,7 @@ function ListLocationsPanel({locations}){
                 {
                     locations.map(location => {
                         return (
-                            <tr key={location.uuid}>
+                            <tr key={location.id ?? location.uuid}>
                                 <td>Action</td>
                                 <td>{location.address}</td>
                                 <td>{location.city}</td>

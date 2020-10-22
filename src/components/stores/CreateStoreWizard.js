@@ -8,13 +8,14 @@ import AddStoreInformation from './AddStoreInformation';
 import AddStoreLocations from './AddStoreLocations';
 import AddStorePhotos from './AddStorePhotos';
 import * as storeActions  from '../../redux/actions/storeActions'
-import './StoreCreation.css';
+import './styles/StoreCreation.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 function CreateStoreWizard({history, ...props}){
     const [store,setStore] = useState(new Store({}));
-    const [locations,setLocations] = useState([]);
     const [photos,setPhotos] = useState([]);
-    const stepImages = ["store_construction.jpg","4323579.jpg","4063893.jpg"];
+    const stepImages = ["store_construction.jpg","Location-Map-Pin.jpg","shop.png"];
 
     const [creationStep, setStep] = useState(validateActualStep());
 
@@ -36,7 +37,7 @@ function CreateStoreWizard({history, ...props}){
     function StepComponent(){
         switch(creationStep){
             case 1: return <AddStoreInformation store={store} setStore={setStore}  handleNext={handleNextAction}/>
-            case 2: return <AddStoreLocations store={store} setStore={setStore}  locations={locations} setLocations={setLocations} handleNext={handleNextAction} handleBack={handleBackAction}/>
+            case 2: return <AddStoreLocations store={store} setStore={setStore} handleNext={handleNextAction} handleBack={handleBackAction}/>
             case 3: return <AddStorePhotos photos={photos} setPhotos={setPhotos} handleFinish={handleFinish} handleBack={handleBackAction}/>
             default: break;
         }
@@ -76,6 +77,44 @@ function CreateStoreWizard({history, ...props}){
         <div className="container-contact100">
             <div className="wrap-contact100">
                 <h2>Create Store</h2>
+                <div className="steps">
+                    <ul role="tablist">
+                        <li role="tab" aria-disabled="false" aria-selected>
+                            <span className=
+                                {`number 
+                                    ${creationStep === 1 ? "step-active":""}
+                                    ${creationStep > 1 ? "step-passed":""}
+                                `}
+                            >
+                                {creationStep > 1 ? 
+                                <FontAwesomeIcon icon={faCheck} size="lg" className="plus-icon" /> :
+                                1
+                                }
+                            </span>
+                        </li>
+                        <li role="tab" aria-disabled="false" aria-selected>
+                            <span className=
+                                {`number 
+                                    ${creationStep === 2 ? "step-active":""}
+                                    ${creationStep > 2 ? "step-passed":""}
+                                `}
+                            >
+                                2
+                            </span>
+                        </li>
+                        <li role="tab" aria-disabled="false" aria-selected>
+                            <span 
+                                className=
+                                {`number 
+                                    ${creationStep===3 ? "step-active":""}
+                                    ${creationStep > 3 ? "step-passed":""}
+                                `}
+                            >
+                                3
+                            </span>
+                        </li>
+                    </ul>
+                </div>
                 <div className="state-form">
                     <figure className="state-image-container">
                         <img className="state-image" src={'/static/images/page/'+stepImages[creationStep-1]} alt=""/>

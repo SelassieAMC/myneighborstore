@@ -44,16 +44,14 @@ export function saveStore(store){
     return function(dispatch){
         dispatch(beginApiCall());
         return store.id ? 
-                storeCalls
-                .saveStoreDetails(store)
+                storeCalls.updateStore(store)
                     .then( storeResp => {
                         dispatch(saveStoreSuccess(storeResp));
                     }).catch(error => {
                         dispatch(saveStoreFail());
                         throw error;
                     }) :
-                storeCalls
-                .createStore2(store)
+                storeCalls.createStore(store)
                     .then( storeResp => {
                         dispatch(saveStoreSuccess(storeResp));
                     }).catch(error => {

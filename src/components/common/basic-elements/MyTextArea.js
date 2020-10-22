@@ -10,12 +10,13 @@ function MyTextArea(
         msgPlaceHolder, 
         name,
         value,
-        onChangeHandler
+        onChangeHandler,
+        isDisabled = false
     }){
     return (
         <div className="wrap-input100 validate-input bg1 rs1-alert-validate" data-validate = {msgValidation}>
             <span className="label-input100">{txtLabel} {isMandatory ? '*' : '' }</span>
-            <textarea className="input100" name={name} defaultValue={value} placeholder={msgPlaceHolder} onChange={onChangeHandler}></textarea>
+            <textarea className="input100" name={name} defaultValue={value} placeholder={msgPlaceHolder} onChange={onChangeHandler} disabled={isDisabled}></textarea>
         </div>
     )
 }

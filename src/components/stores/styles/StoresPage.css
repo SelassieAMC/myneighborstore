@@ -21,10 +21,10 @@
     background-color: #f48840;
     color: black;
     border-radius: 5px;
-    width: 15%;
+    width: 20%;
     padding: 10px;
     margin: 10px 5px 20px 0;
-    font-size: 18px;
+    font-size: 14px;
     transition: 0.18s ease-in-out;
     box-shadow: 0 1px 5px rgba(146, 58, 7, 0.596);
 }
@@ -46,7 +46,7 @@
     -moz-transform: rotate(360deg);
 }
 
-@media only screen and (max-width: 520px) {
+@media only screen and (max-width: 576px) {
     .menu-button{
         width: 100%;
     }

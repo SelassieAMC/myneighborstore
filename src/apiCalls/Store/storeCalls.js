@@ -48,25 +48,6 @@ export async function getStores() {
 
 export async function createStore(store){
     return getAccessToken().then(token => {
-
-        const requestInit = createHeaders(token, 'POST', store );
-
-        return fetch(baseApiUrl+"/stores",requestInit)
-        .then( response => {
-            return response.json();
-        })
-        .catch(error => {
-            console.log(`Error calling api ${error}`);
-            throw error;
-        });
-    }).catch(error => {
-        console.log(`Error getting access token ${error}`);
-        throw error;
-    });
-}
-
-export async function createStore2(store){
-    return getAccessToken().then(token => {
         const headers = new Headers();
         headers.append("Authorization",`Bearer ${token}`);
 
@@ -79,6 +60,44 @@ export async function createStore2(store){
 
         let requestInit = {
             method: 'POST',
+            headers: headers,
+            body: formData
+        }
+
+        return fetch(baseApiUrl+"/stores",requestInit)
+        .then( response => {
+            if(response.ok){
+                return response.json();
+            }else{
+                throw response;
+            }
+        })
+        .catch(error => {
+            console.log(`Error calling api ${error}`);
+            throw error;
+        });
+
+
+    }).catch(error => {
+        console.log(`Error getting access token ${error}`);
+        throw error;
+    });
+}
+
+export async function updateStore(store){
+    return getAccessToken().then(token => {
+        const headers = new Headers();
+        headers.append("Authorization",`Bearer ${token}`);
+
+        const formData  = new FormData();
+
+        for(const value in store.photos) {
+            formData.append(store.photos[value].name, store.photos[value].photoFile);
+        }
+        formData.append("storeData",JSON.stringify(store));
+
+        let requestInit = {
+            method: 'PUT',
             headers: headers,
             body: formData
         }
@@ -120,43 +139,6 @@ export async function saveStoreDetails(store){
             console.log(`Error calling api ${error}`);
             throw error;
         });
-    }).catch(error => {
-        console.log(`Error getting access token ${error}`);
-        throw error;
-    });
-}
-
-export async function saveStorePhotos(photosData){
-
-    return getAccessToken().then(token => {
-
-        const headers = new Headers();
-        headers.append("Authorization",`Bearer ${token}`);
-
-        const formData  = new FormData();
-
-        for(const value in photosData) {
-            formData.append(photosData[value].name, photosData[value].PhotoFile);
-        }
-        formData.append("Objects",JSON.stringify(photosData));
-
-        let requestInit = {
-            method: 'POST',
-            headers: headers,
-            body: formData
-        }
-
-        return fetch(baseApiUrl+"/Gallery",requestInit)
-        .then( response => {
-            if(!response.ok){
-                throw response;
-            }
-        })
-        .catch(error => {
-            console.log(`Error calling api ${error}`);
-            throw error;
-        });
-
     }).catch(error => {
         console.log(`Error getting access token ${error}`);
         throw error;

@@ -5,10 +5,34 @@ import MySubmitButton from '../common/basic-elements/MySubmitButton';
 import ListLocationsPanel from './ListLocationsPanel';
 import * as Utils from '../../utils/utils';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { GoogleMap, LoadScript } from '@react-google-maps/api';
 
-function AddStoreLocations({store,setStore,locations,setLocations,handleNext, handleBack}){
+const containerStyle = {
+    width: '100%',
+    height: '400px'
+  };
+   
+  const center = {
+    lat: 4.624335,
+    lng: -74.063644
+  };
+
+function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode}){
 
     const [location,setLocation] = useState(new Location({}));
+    const [map, setMap] = React.useState(null);
+
+    const onLoad = React.useCallback(function callback(map) {
+        const bounds = new window.google.maps.LatLngBounds();
+        map.fitBounds(bounds);
+        setMap(map)
+      }, []);
+    
+    const onUnmount = React.useCallback(function callback(map) {
+    setMap(null)
+    }, []);
 
     function handleChange(event){
         const name = event.target.name;
@@ -38,13 +62,6 @@ function AddStoreLocations({store,setStore,locations,setLocations,handleNext, ha
 
     return(
         <section className="contact100-form validate-form" onSubmit={handleNext}>
-            <div className="location-panel-container">
-                { store.locations.length > 0 ?
-                    <ListLocationsPanel locations={store.locations}/> :
-                    <></>
-                }
-                <button onClick={addNewLocation} className="add-button">Add site</button>
-            </div>
             <MyInput 
                 msgValidation = "Enter the address" 
                 txtLabel = "Address"
@@ -54,6 +71,7 @@ function AddStoreLocations({store,setStore,locations,setLocations,handleNext, ha
                 name = "address"
                 value = {location.getAddress()}
                 onChangeHandler = {handleChange}
+                hidden={viewMode}
             />
 
             <MyInput 
@@ -66,6 +84,7 @@ function AddStoreLocations({store,setStore,locations,setLocations,handleNext, ha
                 name = "city"
                 value = {location.getCity()}
                 onChangeHandler = {handleChange}
+                hidden={viewMode}
             />
 
             <MyInput 
@@ -78,6 +97,7 @@ function AddStoreLocations({store,setStore,locations,setLocations,handleNext, ha
                 name = "country"
                 value = {location.getCountry()}
                 onChangeHandler = {handleChange}
+                hidden={viewMode}
             />
 
             <MyInput 
@@ -89,17 +109,44 @@ function AddStoreLocations({store,setStore,locations,setLocations,handleNext, ha
                 name = "coordinates"
                 value = {location.getCoordinates()}
                 onChangeHandler = {handleChange}
+                hidden={viewMode}
             />
+            {
+                !viewMode ? 
+                <LoadScript
+                    googleMapsApiKey="AIzaSyA1rDr6RUgwIbN4HiRYQ3oE2UQt2o9UJ6w"
+                >
+                    <GoogleMap
+                        mapContainerStyle={containerStyle}
+                        center={center}
+                        zoom={10}
+                        onLoad={onLoad}
+                        onUnmount={onUnmount}
+                    ></GoogleMap>
+                </LoadScript> :
+                <></>
+            }
+            
+            <div className="location-panel-container">
+                { store.locations.length > 0 ?
+                    <ListLocationsPanel locations={store.locations}/> :
+                    <><p>No locations registered!!</p></>
+                }
+            </div>
+            <button hidden={viewMode} onClick={addNewLocation} className="add-button">
+                <img src="/static/icons/button-850100_960_720.png" alt="addbutton"/>
+                <FontAwesomeIcon icon={faPlusCircle} size="lg" className="plus-icon" />
+            </button>
             <div className="container-contact100-form-btn">
                 { store.locations.length > 0 ?
-                    <MySubmitButton textButton="Next" disabled={false} onClickHandler={handleNext} styleClass="contact50-form-btn"/> :
-                    <MySubmitButton textButton="Next" disabled={true} styleClass="disabled-form-btn"/>
+                    <MySubmitButton textButton="Next" disabled={false} isHidden={viewMode} onClickHandler={handleNext} styleClass="contact50-form-btn"/> :
+                    <MySubmitButton textButton="Next" disabled={true} isHidden={viewMode} styleClass="disabled-form-btn"/>
                 }
-                <MySubmitButton textButton="Back" onClickHandler={handleBack} styleClass="contact50-form-btn" />
+                <MySubmitButton textButton="Back" isHidden={viewMode} onClickHandler={handleBack} styleClass="contact50-form-btn" />
             </div>
 
         </section>
     );
 }
 
-export default AddStoreLocations;
+export default React.memo(AddStoreLocations);
