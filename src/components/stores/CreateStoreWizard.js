@@ -11,11 +11,12 @@ import * as storeActions  from '../../redux/actions/storeActions'
 import './styles/StoreCreation.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import {ReactComponent as StoreImage } from './../../svgImages/store_construction.svg';
 
 function CreateStoreWizard({history, ...props}){
     const [store,setStore] = useState(new Store({}));
     const [photos,setPhotos] = useState([]);
-    const stepImages = ["store_construction.jpg","Location-Map-Pin.jpg","shop.png"];
+    const stepImages = ["store_construction.jpg",null,"shop.png"];
 
     const [creationStep, setStep] = useState(validateActualStep());
 
@@ -115,10 +116,25 @@ function CreateStoreWizard({history, ...props}){
                         </li>
                     </ul>
                 </div>
+                {
+                    creationStep === 1 ? 
+                        <p className="page-description">Add the basic information related to you and your store </p> : null
+                }
+                {   creationStep === 2 ? 
+                        <p className="page-description">Add one or more address where you have stores </p> : null
+                }
+                {   creationStep === 3 ? 
+                        <p className="page-description">Add your store photos, remember, these are going to be the presentation of your store try to show a full view of your products.</p> : null
+                }
                 <div className="state-form">
-                    <figure className="state-image-container">
-                        <img className="state-image" src={'/static/images/page/'+stepImages[creationStep-1]} alt=""/>
-                    </figure>
+                    {
+                        creationStep === 1 ? 
+                        <figure className="state-image-container">
+                            <StoreImage className="state-image" />
+                        </figure> : 
+                        null
+                    }
+
                     <StepComponent/>
                 </div>
             </div>

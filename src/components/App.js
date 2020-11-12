@@ -11,6 +11,7 @@ import StoresPage from './stores/StoresPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreateStoreWizard from './stores/CreateStoreWizard';
+import StoreEdition from './stores/StoreEdition';
 import StoreDetails from './stores/StoreDetails';
 
 library.add(fab);
@@ -30,6 +31,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Home}></Route>
           <Route path="/stores" component={StoresPage}></Route>
+          <Route path="/store-edition/:id" component={StoreEdition}></Route>
           <Route path="/store-details/:id" component={StoreDetails}></Route>
           <Route path="/create-store-wiz" component={CreateStoreWizard}></Route>
           <Route component={PageNotFound}></Route>

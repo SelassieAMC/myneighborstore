@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Location from '../../models/Location';
 import MyInput from '../common/basic-elements/MyInput';
 import MySubmitButton from '../common/basic-elements/MySubmitButton';
@@ -8,10 +8,15 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as dictionaryActions from '../../redux/actions/dictionaryActions';
 
 const containerStyle = {
     width: '100%',
-    height: '400px'
+    height: '400px',
+    borderRadius: '15px',
+    marginBottom: '15px'
   };
    
   const center = {
@@ -19,20 +24,47 @@ const containerStyle = {
     lng: -74.063644
   };
 
-function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode}){
+function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode, countries, country, ...props}){
 
-    const [location,setLocation] = useState(new Location({}));
-    const [map, setMap] = React.useState(null);
+    let location = new Location({});
+    const [map, setMap] = useState(null);
+    const [citiesOptions, setCities] = useState([]);
+    const [localitiesOptions, setLocalities] = useState([]);
+    const [neighboorsOptions, setNeighboors] = useState([]);
 
-    const onLoad = React.useCallback(function callback(map) {
-        const bounds = new window.google.maps.LatLngBounds();
-        map.fitBounds(bounds);
-        setMap(map)
-      }, []);
+    const onLoad = useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds();
+    map.fitBounds(bounds);
+    setMap(map)
+    }, []);
     
-    const onUnmount = React.useCallback(function callback(map) {
+    const onUnmount = useCallback(function callback(map) {
     setMap(null)
     }, []);
+
+    useEffect(() => {
+        if(!country.id){
+            props.actions.loadCountry(1)
+                .catch(error => {
+                    toast.error(error);
+                })
+        }
+    });
+
+    function stateChangeHandler(id){
+        const cities = country.states.find(x => x.id === id).cities;
+        setCities(cities);
+    }
+
+    function cityChangeHandler(id){
+        const localities = citiesOptions.find(x => x.id === id).localities;
+        setLocalities(localities);
+    }
+
+    function localityChangeHandler(id){
+        const neighboors = localitiesOptions.find(x => x.id === id).neighboors;
+        setNeighboors(neighboors);
+    }
 
     function handleChange(event){
         const name = event.target.name;
@@ -44,7 +76,6 @@ function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode}){
             case "coordinates":location.coordinates = value; break;
             default: break;
         }
-        setLocation(location);
     }
 
     function addNewLocation(){
@@ -54,10 +85,9 @@ function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode}){
         }
         const id = Utils.createGuid();
         location.uuid = id;
-        setLocation(location);
 
         setStore({...store, ...store.locations.push(location)});
-        setLocation(new Location({}));
+        location = new Location({});
     }
 
     return(
@@ -73,70 +103,124 @@ function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode}){
                 onChangeHandler = {handleChange}
                 hidden={viewMode}
             />
+            <div className="locations-data">
+                <div className="location-fields">
+                    { countries.length > 0 ?
+                    <div className="wrap-input100 input100-select bg1">
+                        <span className="label-input100">Country</span>
+                        <div>
+                            <select className="js-select2" name="country">
+                                <option>Please chooses</option>
+                                { countries.map((item) => {
+                                    return (<option key={item.id}>item.name</option>)
+                                })}
+                            </select>
+                            <div className="dropDownSelect2"></div>
+                        </div>
+                    </div> : null
+                    }
+                    <div className="wrap-input100 input100-select bg1">
+                        <span className="label-input100">State</span>
+                        <div>
+                            <select className="js-select2" name="state" onChange={() => stateChangeHandler(1)}>
+                                <option>Please chooses</option>
+                                {   country?.states?.length > 0 ? country?.states?.map( item => {
+                                        return <option key={item?.id} value={item?.id}>{item?.name}</option>
+                                    }): null
+                                }
+                            </select>
+                            <div className="dropDownSelect2"></div>
+                        </div>
+                    </div>
+                    <div className="wrap-input100 input100-select bg1">
+                        <span className="label-input100">City</span>
+                        <div>
+                            <select className="js-select2" name="city">
+                                <option>Please chooses</option>
+                                {citiesOptions.length > 0 ? citiesOptions.map((item) => {
+                                    return (<option key={item?.id}>{item?.name}</option>)
+                                }) : null}
+                            </select>
+                            <div className="dropDownSelect2"></div>
+                        </div>
+                    </div>
+                    <div className="wrap-input100 input100-select bg1">
+                        <span className="label-input100">Neighboor</span>
+                        <div>
+                            <select className="js-select2" name="neighboor">
+                                <option>Please chooses</option>
+                                {countries.length > 0 ? countries.map((item) => {
+                                    return (<option key={item.id}>item.name</option>)
+                                }) : null}
+                            </select>
+                            <div className="dropDownSelect2"></div>
+                        </div>
+                    </div>
+                    {/* <MyInput 
+                        msgValidation = "Enter the city" 
+                        txtLabel = "City"
+                        isMandatory
+                        msgPlaceHolder = "Enter the store city"
+                        type = "number"
+                        name = "city"
+                        value = {location.getCity()}
+                        onChangeHandler = {handleChange}
+                        hidden={viewMode}
+                    />
 
-            <MyInput 
-                msgValidation = "Enter the city" 
-                txtLabel = "City"
-                isMandatory
-                msgPlaceHolder = "Enter the store city"
-                styleclass = "rs1-wrap-input100"
-                type = "number"
-                name = "city"
-                value = {location.getCity()}
-                onChangeHandler = {handleChange}
-                hidden={viewMode}
-            />
+                    <MyInput 
+                        msgValidation = "Enter the country" 
+                        txtLabel = "Country"
+                        isMandatory
+                        msgPlaceHolder = "Enter the store country"
+                        type = "number"
+                        name = "country"
+                        value = {location.getCountry()}
+                        onChangeHandler = {handleChange}
+                        hidden={viewMode}
+                    /> */}
 
-            <MyInput 
-                msgValidation = "Enter the country" 
-                txtLabel = "Country"
-                isMandatory
-                msgPlaceHolder = "Enter the store country"
-                styleclass = "rs1-wrap-input100"
-                type = "number"
-                name = "country"
-                value = {location.getCountry()}
-                onChangeHandler = {handleChange}
-                hidden={viewMode}
-            />
-
-            <MyInput 
-                msgValidation = "Enter the coordinates" 
-                txtLabel = "Coordinates"
-                isMandatory
-                msgPlaceHolder = "Enter the store coordinates"
-                type = "text"
-                name = "coordinates"
-                value = {location.getCoordinates()}
-                onChangeHandler = {handleChange}
-                hidden={viewMode}
-            />
-            {
-                !viewMode ? 
-                <LoadScript
-                    googleMapsApiKey="AIzaSyA1rDr6RUgwIbN4HiRYQ3oE2UQt2o9UJ6w"
-                >
-                    <GoogleMap
-                        mapContainerStyle={containerStyle}
-                        center={center}
-                        zoom={10}
-                        onLoad={onLoad}
-                        onUnmount={onUnmount}
-                    ></GoogleMap>
-                </LoadScript> :
-                <></>
-            }
-            
+                    <MyInput 
+                        msgValidation = "Enter the coordinates" 
+                        txtLabel = "Coordinates"
+                        isMandatory
+                        msgPlaceHolder = "Enter the store coordinates"
+                        type = "text"
+                        name = "coordinates"
+                        value = {location.getCoordinates()}
+                        onChangeHandler = {handleChange}
+                        hidden={viewMode}
+                    />
+                    <button hidden={viewMode} onClick={addNewLocation} className="add-button">
+                        <img src="/static/icons/button-850100_960_720.png" alt="addbutton"/>
+                        <FontAwesomeIcon icon={faPlusCircle} size="lg" className="plus-icon" />
+                    </button>
+                </div>
+                {
+                    !viewMode ? 
+                    <div className="google-map-container">
+                        <LoadScript
+                            googleMapsApiKey="AIzaSyA1rDr6RUgwIbN4HiRYQ3oE2UQt2o9UJ6w"
+                        >
+                            <GoogleMap
+                                mapContainerStyle={containerStyle}
+                                center={center}
+                                zoom={10}
+                                onLoad={onLoad}
+                                onUnmount={onUnmount}
+                                position={{lat:center.lat, lng:center.lng}}
+                            ></GoogleMap>
+                        </LoadScript>
+                    </div> : 
+                    <></>
+                }
+            </div>
             <div className="location-panel-container">
                 { store.locations.length > 0 ?
                     <ListLocationsPanel locations={store.locations}/> :
-                    <><p>No locations registered!!</p></>
+                    null
                 }
             </div>
-            <button hidden={viewMode} onClick={addNewLocation} className="add-button">
-                <img src="/static/icons/button-850100_960_720.png" alt="addbutton"/>
-                <FontAwesomeIcon icon={faPlusCircle} size="lg" className="plus-icon" />
-            </button>
             <div className="container-contact100-form-btn">
                 { store.locations.length > 0 ?
                     <MySubmitButton textButton="Next" disabled={false} isHidden={viewMode} onClickHandler={handleNext} styleClass="contact50-form-btn"/> :
@@ -144,9 +228,24 @@ function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode}){
                 }
                 <MySubmitButton textButton="Back" isHidden={viewMode} onClickHandler={handleBack} styleClass="contact50-form-btn" />
             </div>
-
         </section>
     );
 }
 
-export default React.memo(AddStoreLocations);
+function mapStateToProps(state){
+    return {
+        countries: state.dictionaries.countries,
+        country: state.dictionaries.country
+    }
+}
+
+function mapDispatchToProps(dispatch){
+    return {
+        actions: {
+            loadCountries: bindActionCreators(dictionaryActions.loadCountries, dispatch),
+            loadCountry: bindActionCreators(dictionaryActions.loadCountry, dispatch)
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (React.memo(AddStoreLocations));

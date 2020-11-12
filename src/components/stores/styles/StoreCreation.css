@@ -26,7 +26,7 @@
     border-radius: 10px;
     overflow: hidden;
     /* padding: 0px 55px 90px 55px; */
-    padding: 0 15% 20px 15%;
+    padding: 0 5% 20px 5%;
   }
 
   .steps {
@@ -138,11 +138,12 @@
 
   .state-image-container{
     align-self: center;
-    margin:40px;
+    /* margin:40px; */
+    width: 95%;
   }
 
   .state-image{
-    max-width: 250px;
+    /* max-width: 250px; */
     border-radius: 10px;
   }
 
@@ -172,7 +173,8 @@
   }
 
   .location-fields{
-    padding-left: 5px;
+    width: 90%;
+    margin-right: 15px;
   }
 
   .contact100-form .location-panel-container {
@@ -189,7 +191,6 @@
   .table-panel{
     width: 100%;
     border-collapse: initial;
-    margin: 10px 10px 30px 10px;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 25%);
   }
 
@@ -220,10 +221,34 @@
 
   .table-panel td:hover {background-color: #ddd; cursor: pointer;}
 
+  .locations-data {
+    display: flex;
+    flex-direction: row;
+    flex: 2;
+    justify-content: space-between;
+  }
+
+  .google-map-container{
+    width: 90%;
+  }
+
+  p.page-description{
+    text-align: center;
+    font-weight: bolder;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #001524;
+}
+
+
 
 @media (max-width: 576px) {
   .contact100-form {
     flex-direction: column;
+  }
+
+  .state-image-container{
+    width: 50%;
   }
 
   .state-form{
@@ -233,6 +258,11 @@
 }  
 
 @media (max-width: 1000px) {
+  .state-image-container{
+    width: 50%;
+    display: none;
+  }
+
   .state-form{
     flex-direction: column;
   }

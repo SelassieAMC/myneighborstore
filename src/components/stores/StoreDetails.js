@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Store from '../../models/Store';
 import * as storeActions from '../../redux/actions/storeActions';
+import MySubmitButton from '../common/basic-elements/MySubmitButton';
 import AddStoreInformation from './AddStoreInformation';
 import AddStoreLocations from './AddStoreLocations';
 import AddStorePhotos from './AddStorePhotos';
 import './styles/StoreCreation.css';
-import './styles/StoreDetails.css';
+import './styles/StoreEdition.css';
+import { Link } from 'react-router-dom';
 
 function StoreDetails({store, stores, ...props}){
-
-    const [stepSection, setSection] = useState(1);
 
     useEffect(() => {
         if(stores.length === 0){
@@ -19,37 +19,27 @@ function StoreDetails({store, stores, ...props}){
         }
     },[props, stores]);
 
-    function handleTab(step){
-        setSection(step);
-    }
-
-    function StepComponent(){
-        switch(stepSection){
-            case 1: return <AddStoreInformation store={store} viewMode={true}/>
-            case 2: return <AddStoreLocations store={store} viewMode={true}/>
-            case 3: return <AddStorePhotos photos={store.photos} viewMode={true}/>
-            default: break;
-        }
-    }
-
     return (
         <div className="container-contact100">
             <div className="wrap-contact100">
                 <h2>Store Details</h2>
-                <ul className="nav nav-pills" role="tablist">
-                    <li className="nav-item">
-                        <span className={`nav-link ${stepSection === 1 ? 'active' : ''}`} data-toggle="pill" onClick={() => handleTab(1)}>Basic Information</span>
-                    </li>
-                    <li className="nav-item">
-                        <span className={`nav-link ${stepSection === 2 ? 'active' : ''}`} data-toggle="pill" onClick={() => handleTab(2)}>Location</span>
-                    </li>
-                    <li className="nav-item">
-                        <span className={`nav-link ${stepSection === 3 ? 'active' : ''}`} data-toggle="pill" onClick={() => handleTab(3)}>Photos</span>
-                    </li>
-                </ul>
-                <div className="tab-content">
-                    <StepComponent/>
-                </div>
+                <p className="page-description">Basic Information</p>
+                <AddStoreInformation store={store} viewMode/>
+                <p className="page-description">Locations associated</p>
+                {
+                    store.locations.length > 0 ?
+                    <AddStoreLocations store={store} viewMode/> :
+                    <p>No locations registered to this store</p> 
+                }
+                <p className="page-description">Store photos</p>
+                {
+                    store.photos.length > 0 ?
+                    <AddStorePhotos photos={store.photos} viewMode/> :
+                    <p>No photos uploaded to this store</p> 
+                }
+                <Link to={`/store-edition/${store.id}`}>
+                    <MySubmitButton textButton="Edit" styleClass="contact100-form-btn"/> 
+                </Link>               
             </div>
         </div>
     )
@@ -67,7 +57,6 @@ function mapStateToProps(state, ownProps){
 function mapDispatchToProps(dispatch){
     return {
         actions: {
-            updateStore : bindActionCreators(storeActions.saveStore, dispatch),
             loadStores : bindActionCreators(storeActions.loadStores, dispatch)
         }
     }

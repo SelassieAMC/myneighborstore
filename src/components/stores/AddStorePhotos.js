@@ -56,45 +56,40 @@ function AddStorePhotos({ photos, handleFinish, handleBack, viewMode}){
     }
 
     return (
-        <div className="container-contact100">
-            <div className="wrap-contact100">
-                <h2>Add Store Photos</h2>
-                <form className="contact100-form validate-form" onSubmit={handleSubmitAction}>
-                    <MyInput 
-                        msgValidation = "Select min 1 photo and max 5" 
-                        txtLabel = "Store Photos"
-                        isMandatory
-                        type = "file"
-                        name = "photos"
-                        isMultiple
-                        onChangeHandler={onChangeHandler}
-                        isDisabled={viewMode}
-                        hidden={viewMode}
-                    />
+        <form className="contact100-form validate-form" onSubmit={handleSubmitAction}>
+            <MyInput 
+                msgValidation = "Select min 1 photo and max 5" 
+                txtLabel = "Store Photos"
+                isMandatory
+                type = "file"
+                name = "photos"
+                isMultiple
+                onChangeHandler={onChangeHandler}
+                isDisabled={viewMode}
+                hidden={viewMode}
+            />
+            {
+                existImages && images.length > 0 ? 
+                <div className="container-images">
                     {
-                        existImages && images.length > 0 ? 
-                        <div className="container-images">
-                            {
-                                images?.map( image => {
-                                    return (
-                                        <div className="preview-upload" key={index++}>
-                                            <img  src={image} alt="preload"/>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div> :
- 
-                        <></>
+                        images?.map( image => {
+                            return (
+                                <div className="preview-upload" key={index++}>
+                                    <img  src={image} alt="preload"/>
+                                </div>
+                            )
+                        })
                     }
-                    <div className="container-contact100-form-btn">
-                        <MySubmitButton textButton="Finish" type="submit" styleClass="contact50-form-btn" isHidden={viewMode}/>
-                        <MySubmitButton textButton="Back" onClickHandler={handleBack} styleClass="contact50-form-btn" isHidden={viewMode}/>
-                    </div>
+                </div> :
 
-                </form>
+                <></>
+            }
+            <div className="container-contact100-form-btn">
+                <MySubmitButton textButton="Finish" type="submit" styleClass="contact50-form-btn" isHidden={viewMode}/>
+                <MySubmitButton textButton="Back" onClickHandler={handleBack} styleClass="contact50-form-btn" isHidden={viewMode}/>
             </div>
-        </div>
+
+        </form>
     );
 }
 export default AddStorePhotos;
