@@ -12,6 +12,7 @@ import './styles/StoreEdition.css';
 function StoreEdition({store, stores, ...props}){
 
     const [stepSection, setSection] = useState(1);
+    const [storeEdited, setStore] = useState(store);
 
     useEffect(() => {
         if(stores.length === 0){
@@ -25,9 +26,9 @@ function StoreEdition({store, stores, ...props}){
 
     function StepComponent(){
         switch(stepSection){
-            case 1: return <AddStoreInformation store={store}/>
-            case 2: return <AddStoreLocations store={store}/>
-            case 3: return <AddStorePhotos photos={store.photos}/>
+            case 1: return <AddStoreInformation store={storeEdited} setStore={setStore} editMode />
+            case 2: return <AddStoreLocations store={storeEdited} setStore={setStore} editMode/>
+            case 3: return <AddStorePhotos photos={storeEdited.photos} editMode/>
             default: break;
         }
     }

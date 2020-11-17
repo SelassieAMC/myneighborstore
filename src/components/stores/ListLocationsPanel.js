@@ -12,7 +12,7 @@ function ListLocationsPanel({locations}){
                         <th>Action</th>
                         <th>Address</th>
                         <th>City</th>
-                        <th>Country</th>
+                        <th>Neighbor</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,8 +22,8 @@ function ListLocationsPanel({locations}){
                             <tr key={location.id ?? location.uuid}>
                                 <td>Action</td>
                                 <td>{location.address}</td>
-                                <td>{location.city}</td>
-                                <td>{location.country}</td>
+                                <td>{location.city.name.toUpperCase()}</td>
+                                <td>{location.neighbor.name.toUpperCase()}</td>
                             </tr>
                         )
                     })

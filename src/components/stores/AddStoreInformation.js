@@ -3,7 +3,7 @@ import MyInput from '../common/basic-elements/MyInput';
 import MySubmitButton from '../common/basic-elements/MySubmitButton';
 import MyTextArea from '../common/basic-elements/MyTextArea';
 
-function AddStoreInformation({store,setStore,handleNext, viewMode}){
+function AddStoreInformation({store,setStore,handleNext, viewMode, editMode}){
 
     function handleChange(event){
         const name = event.target.name;
@@ -68,9 +68,13 @@ function AddStoreInformation({store,setStore,handleNext, viewMode}){
                 onChangeHandler = {handleChange}
                 isDisabled={viewMode}
             />
-            <div className="container-contact100-form-btn">
-                <MySubmitButton textButton="Next" onClickHandler={handleNext} styleClass="contact50-form-btn" isHidden={viewMode}/>
-            </div>
+            {
+                editMode ? editMode : viewMode ? 
+                <div className="container-contact100-form-btn">
+                    <MySubmitButton textButton="Next" onClickHandler={handleNext} styleClass="contact50-form-btn" isHidden={editMode ? editMode : viewMode}/>
+                </div> : null
+            }
+            
         </section>
     )
 }

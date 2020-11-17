@@ -32,7 +32,7 @@ function Banner({stores, ...props}){
                         stores.map(store => {
                             return (
                                 <div key={store.id} className="item">
-                                    <img className="img" src= {store.photos[0].urlAccess} alt=""/>
+                                    <img className="img" src= {store?.photos[0]?.urlAccess} alt=""/>
                                     <div className="item-content">
                                         <div className="main-content">
                                             <div className="meta-category">

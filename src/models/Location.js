@@ -2,8 +2,16 @@ class Location{
     constructor(data){
         this.id = data.id;
         this.address = data.address;
-        this.city = data.city;
+        this.countryId = data.countryId;
         this.country = data.country;
+        this.stateId = data.stateId;
+        this.state = data.state;
+        this.cityId = data.cityId;
+        this.city = data.city;
+        this.localityId = data.localityId;
+        this.locality = data.locality;
+        this.neighborId = data.neighborId;
+        this.neighbor = data.neighbor;
         this.coordinates = data.coordinates;
         this.isenable = data.isenable ?? true;
         this.storeid = data.storeid;

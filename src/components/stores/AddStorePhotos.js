@@ -3,7 +3,7 @@ import MyInput from '../common/basic-elements/MyInput';
 import MySubmitButton from '../common/basic-elements/MySubmitButton';
 import { toast } from 'react-toastify';
 
-function AddStorePhotos({ photos, handleFinish, handleBack, viewMode}){
+function AddStorePhotos({ photos, handleFinish, handleBack, viewMode, editMode}){
 
     const [existImages, setExists] = useState(photos.length > 0 ? true : false);
     const [images, setImages] = useState(getUris());
@@ -57,17 +57,21 @@ function AddStorePhotos({ photos, handleFinish, handleBack, viewMode}){
 
     return (
         <form className="contact100-form validate-form" onSubmit={handleSubmitAction}>
-            <MyInput 
-                msgValidation = "Select min 1 photo and max 5" 
-                txtLabel = "Store Photos"
-                isMandatory
-                type = "file"
-                name = "photos"
-                isMultiple
-                onChangeHandler={onChangeHandler}
-                isDisabled={viewMode}
-                hidden={viewMode}
-            />
+            {
+                !viewMode ? 
+                <MyInput 
+                    msgValidation = "Select min 1 photo and max 5" 
+                    txtLabel = "Store Photos"
+                    isMandatory
+                    type = "file"
+                    name = "photos"
+                    isMultiple
+                    onChangeHandler={onChangeHandler}
+                    isDisabled={viewMode}
+                    hidden={viewMode}
+                /> : null
+            }
+
             {
                 existImages && images.length > 0 ? 
                 <div className="container-images">
@@ -84,11 +88,13 @@ function AddStorePhotos({ photos, handleFinish, handleBack, viewMode}){
 
                 <></>
             }
-            <div className="container-contact100-form-btn">
-                <MySubmitButton textButton="Finish" type="submit" styleClass="contact50-form-btn" isHidden={viewMode}/>
-                <MySubmitButton textButton="Back" onClickHandler={handleBack} styleClass="contact50-form-btn" isHidden={viewMode}/>
-            </div>
-
+            {
+                editMode ? editMode : viewMode ?  
+                <div className="container-contact100-form-btn">
+                    <MySubmitButton textButton="Finish" type="submit" styleClass="contact50-form-btn" isHidden={editMode ? editMode : viewMode}/>
+                    <MySubmitButton textButton="Back" onClickHandler={handleBack} styleClass="contact50-form-btn" isHidden={editMode ? editMode : viewMode}/>
+                </div> : null
+            }
         </form>
     );
 }

@@ -24,9 +24,10 @@ const containerStyle = {
     lng: -74.063644
   };
 
-function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode, countries, country, ...props}){
+function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode, editMode, countries, country, ...props}){
 
-    let location = new Location({});
+    //let location = new Location({});
+    const [location, setLocation] = useState(new Location({}));
     const [map, setMap] = useState(null);
     const [citiesOptions, setCities] = useState([]);
     const [localitiesOptions, setLocalities] = useState([]);
@@ -51,29 +52,48 @@ function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode, cou
         }
     });
 
+    function compare ( a, b ){ if(a.name > b.name) return 1; if( a.name < b.name ) return -1; return 0;}
+
     function stateChangeHandler(id){
-        const cities = country.states.find(x => x.id === id).cities;
-        setCities(cities);
+        setLocalities([]);
+        setNeighboors([]);
+        let state = country.states.find(x => x.id === id);
+        setLocation({...location, countryId:country.id, stateId:id, state:{ id : state.id, name: state.name}});
+        const cities = [...state?.cities].sort(compare);
+        setCities(cities ?? []);
     }
 
     function cityChangeHandler(id){
-        const localities = citiesOptions.find(x => x.id === id).localities;
-        setLocalities(localities);
+        setNeighboors([]);
+        let city = citiesOptions.find(x => x.id === id);
+        setLocation({...location, ...{cityId:id, city:{id : city.id, name: city.name}}});
+        const localities = [...city?.localities].sort(compare);
+        setLocalities(localities ?? []);
     }
 
     function localityChangeHandler(id){
-        const neighboors = localitiesOptions.find(x => x.id === id).neighboors;
-        setNeighboors(neighboors);
+        let locality = localitiesOptions.find(x => x.id === id);
+        setLocation({...location, ...{localityId:id, locality:{id : locality.id, name: locality.name}}});
+        const neighboors = [...locality?.neighboors].sort(compare);
+        setNeighboors(neighboors ?? []);
+    }
+
+    function neighborChangeHandler(id){
+        location.neighborId = id;
+        let neighbor = neighboorsOptions.find(x => x.id === id);
+        setLocation({...location, ...{neighborId:id, neighbor:{id : neighbor.id, name: neighbor.name}}});
     }
 
     function handleChange(event){
         const name = event.target.name;
         const value = event.target.value;
         switch(name){
-            case "address":location.address = value; break;
-            case "city":location.city = value; break;
-            case "country":location.country = value; break;
-            case "coordinates":location.coordinates = value; break;
+            case "address": 
+                setLocation({...location, address:value});
+                break;
+            case "coordinates":
+                setLocation({...location, coordinates:value});
+                break;
             default: break;
         }
     }
@@ -87,117 +107,105 @@ function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode, cou
         location.uuid = id;
 
         setStore({...store, ...store.locations.push(location)});
-        location = new Location({});
+        setLocation(new Location({}));
     }
 
     return(
         <section className="contact100-form validate-form" onSubmit={handleNext}>
-            <MyInput 
-                msgValidation = "Enter the address" 
-                txtLabel = "Address"
-                isMandatory
-                msgPlaceHolder = "Enter the store address"
-                type = "text"
-                name = "address"
-                value = {location.getAddress()}
-                onChangeHandler = {handleChange}
-                hidden={viewMode}
-            />
-            <div className="locations-data">
-                <div className="location-fields">
-                    { countries.length > 0 ?
-                    <div className="wrap-input100 input100-select bg1">
-                        <span className="label-input100">Country</span>
-                        <div>
-                            <select className="js-select2" name="country">
-                                <option>Please chooses</option>
-                                { countries.map((item) => {
-                                    return (<option key={item.id}>item.name</option>)
-                                })}
-                            </select>
-                            <div className="dropDownSelect2"></div>
+            {
+            !viewMode ?
+            <>
+                <MyInput 
+                    msgValidation = "Enter the address" 
+                    txtLabel = "Address"
+                    isMandatory
+                    msgPlaceHolder = "Enter the store address"
+                    type = "text"
+                    name = "address"
+                    value = {location.address}
+                    onChangeHandler = {handleChange}
+                /> 
+                <div className="locations-data">
+                    <div className="location-fields">
+                        { countries.length > 0 ?
+                        <div className="wrap-input100 input100-select bg1">
+                            <span className="label-input100">Country</span>
+                            <div>
+                                <select className="js-select2" name="country">
+                                    <option>Please chooses</option>
+                                    { countries.map((item) => {
+                                        return (<option key={item.id}>{item.name.toUpperCase()}</option>)
+                                    })}
+                                </select>
+                                <div className="dropDownSelect2"></div>
+                            </div>
+                        </div> : null
+                        }
+                        <div className="wrap-input100 input100-select bg1">
+                            <span className="label-input100">State</span>
+                            <div>
+                                <select className="js-select2" name="state" onChange={() => stateChangeHandler(1)}>
+                                    <option>Please chooses</option>
+                                    {   country?.states?.length > 0 ? country?.states?.map( item => {
+                                            return <option key={item?.id} value={item?.id}>{item?.name.toUpperCase()}</option>
+                                        }): null
+                                    }
+                                </select>
+                                <div className="dropDownSelect2"></div>
+                            </div>
                         </div>
-                    </div> : null
-                    }
-                    <div className="wrap-input100 input100-select bg1">
-                        <span className="label-input100">State</span>
-                        <div>
-                            <select className="js-select2" name="state" onChange={() => stateChangeHandler(1)}>
-                                <option>Please chooses</option>
-                                {   country?.states?.length > 0 ? country?.states?.map( item => {
-                                        return <option key={item?.id} value={item?.id}>{item?.name}</option>
-                                    }): null
-                                }
-                            </select>
-                            <div className="dropDownSelect2"></div>
+                        <div className="wrap-input100 input100-select bg1">
+                            <span className="label-input100">City</span>
+                            <div>
+                                <select className="js-select2" name="city" onChange={(e) => cityChangeHandler(parseInt(e.target.value))}>
+                                    <option>Please chooses</option>
+                                    {citiesOptions.length > 0 ? citiesOptions.map((item) => {
+                                        return (<option key={item?.id} value={item?.id}>{item?.name.toUpperCase()}</option>)
+                                    }) : null}
+                                </select>
+                                <div className="dropDownSelect2"></div>
+                            </div>
                         </div>
+                        <div className="wrap-input100 input100-select bg1">
+                            <span className="label-input100">Locality</span>
+                            <div>
+                                <select className="js-select2" name="locality" onChange={(e) => localityChangeHandler(parseInt(e.target.value))}>
+                                    <option>Please chooses</option>
+                                    {localitiesOptions.length > 0 ? localitiesOptions.map((item) => {
+                                        return (<option key={item?.id} value={item?.id}>{item?.name.toUpperCase()}</option>)
+                                    }) : null}
+                                </select>
+                                <div className="dropDownSelect2"></div>
+                            </div>
+                        </div>
+                        <div className="wrap-input100 input100-select bg1">
+                            <span className="label-input100">Neighbor</span>
+                            <div>
+                                <select className="js-select2" name="neighbor" onChange={(e) => neighborChangeHandler(parseInt(e.target.value))}>
+                                    <option>Please chooses</option>
+                                    {neighboorsOptions.length > 0 ? neighboorsOptions.map((item) => {
+                                        return (<option key={item?.id} value={item?.id}>{item?.name.toUpperCase()}</option>)
+                                    }) : null}
+                                </select>
+                                <div className="dropDownSelect2"></div>
+                            </div>
+                        </div>
+                        <MyInput 
+                            msgValidation = "Enter the coordinates" 
+                            txtLabel = "Coordinates"
+                            isMandatory
+                            msgPlaceHolder = "Enter the store coordinates"
+                            type = "text"
+                            name = "coordinates"
+                            value = {location.coordinates}
+                            onChangeHandler = {handleChange}
+                            hidden={viewMode}
+                        />
+                        <button hidden={viewMode} onClick={addNewLocation} className="add-button">
+                            <img src="/static/icons/button-850100_960_720.png" alt="addbutton"/>
+                            <FontAwesomeIcon icon={faPlusCircle} size="lg" className="plus-icon" />
+                        </button>
                     </div>
-                    <div className="wrap-input100 input100-select bg1">
-                        <span className="label-input100">City</span>
-                        <div>
-                            <select className="js-select2" name="city">
-                                <option>Please chooses</option>
-                                {citiesOptions.length > 0 ? citiesOptions.map((item) => {
-                                    return (<option key={item?.id}>{item?.name}</option>)
-                                }) : null}
-                            </select>
-                            <div className="dropDownSelect2"></div>
-                        </div>
-                    </div>
-                    <div className="wrap-input100 input100-select bg1">
-                        <span className="label-input100">Neighboor</span>
-                        <div>
-                            <select className="js-select2" name="neighboor">
-                                <option>Please chooses</option>
-                                {countries.length > 0 ? countries.map((item) => {
-                                    return (<option key={item.id}>item.name</option>)
-                                }) : null}
-                            </select>
-                            <div className="dropDownSelect2"></div>
-                        </div>
-                    </div>
-                    {/* <MyInput 
-                        msgValidation = "Enter the city" 
-                        txtLabel = "City"
-                        isMandatory
-                        msgPlaceHolder = "Enter the store city"
-                        type = "number"
-                        name = "city"
-                        value = {location.getCity()}
-                        onChangeHandler = {handleChange}
-                        hidden={viewMode}
-                    />
-
-                    <MyInput 
-                        msgValidation = "Enter the country" 
-                        txtLabel = "Country"
-                        isMandatory
-                        msgPlaceHolder = "Enter the store country"
-                        type = "number"
-                        name = "country"
-                        value = {location.getCountry()}
-                        onChangeHandler = {handleChange}
-                        hidden={viewMode}
-                    /> */}
-
-                    <MyInput 
-                        msgValidation = "Enter the coordinates" 
-                        txtLabel = "Coordinates"
-                        isMandatory
-                        msgPlaceHolder = "Enter the store coordinates"
-                        type = "text"
-                        name = "coordinates"
-                        value = {location.getCoordinates()}
-                        onChangeHandler = {handleChange}
-                        hidden={viewMode}
-                    />
-                    <button hidden={viewMode} onClick={addNewLocation} className="add-button">
-                        <img src="/static/icons/button-850100_960_720.png" alt="addbutton"/>
-                        <FontAwesomeIcon icon={faPlusCircle} size="lg" className="plus-icon" />
-                    </button>
-                </div>
-                {
-                    !viewMode ? 
                     <div className="google-map-container">
                         <LoadScript
                             googleMapsApiKey="AIzaSyA1rDr6RUgwIbN4HiRYQ3oE2UQt2o9UJ6w"
@@ -211,23 +219,26 @@ function AddStoreLocations({store,setStore,handleNext, handleBack, viewMode, cou
                                 position={{lat:center.lat, lng:center.lng}}
                             ></GoogleMap>
                         </LoadScript>
-                    </div> : 
-                    <></>
-                }
-            </div>
+                    </div>
+                </div> 
+            </>: null }
             <div className="location-panel-container">
                 { store.locations.length > 0 ?
                     <ListLocationsPanel locations={store.locations}/> :
                     null
                 }
             </div>
-            <div className="container-contact100-form-btn">
-                { store.locations.length > 0 ?
-                    <MySubmitButton textButton="Next" disabled={false} isHidden={viewMode} onClickHandler={handleNext} styleClass="contact50-form-btn"/> :
-                    <MySubmitButton textButton="Next" disabled={true} isHidden={viewMode} styleClass="disabled-form-btn"/>
-                }
-                <MySubmitButton textButton="Back" isHidden={viewMode} onClickHandler={handleBack} styleClass="contact50-form-btn" />
-            </div>
+            {
+                editMode ? editMode : viewMode ? 
+                null :
+                <div className="container-contact100-form-btn">
+                    { store.locations.length > 0 ?
+                        <MySubmitButton textButton="Next" disabled={false} isHidden={editMode ? editMode : viewMode} onClickHandler={handleNext} styleClass="contact50-form-btn"/> :
+                        <MySubmitButton textButton="Next" disabled={true} isHidden={editMode ? editMode : viewMode} styleClass="disabled-form-btn"/>
+                    }
+                    <MySubmitButton textButton="Back" isHidden={editMode ? editMode : viewMode} onClickHandler={handleBack} styleClass="contact50-form-btn" />
+                </div>
+            }
         </section>
     );
 }
